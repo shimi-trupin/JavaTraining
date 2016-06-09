@@ -11,14 +11,12 @@
 
     <dependencies>
 
-        <!-- http://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.7.4</version>
-        </dependency>
+        <!--place for dependencies-->
 
     </dependencies>
 
+    <build>
+
+    </build>
 
 </project>
