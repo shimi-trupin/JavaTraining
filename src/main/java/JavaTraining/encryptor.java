@@ -1,4 +1,4 @@
-package encryptor;
+package JavaTraining;
 
 import java.io.File;
 import java.util.Scanner;
