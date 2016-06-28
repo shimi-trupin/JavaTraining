@@ -18,7 +18,8 @@ public class PointTest {
     public void getY() throws Exception {
         Point a = new Point(2,4);
 
-        assertEquals(  "y is not  asdokijashbndfgjklbansd ",  a.getY(), 7);
+//        assertEquals(  "y is not  asdokijashbndfgjklbansd ",  a.getY(), 7);
+        assertEquals(  "y is not  asdokijashbndfgjklbansd ",  a.getY(), 4);
     }
 
 }
