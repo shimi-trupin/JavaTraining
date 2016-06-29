@@ -7,22 +7,25 @@ import java.util.Scanner;
  * Created by shimi on 30/05/2016.
  * Chapter 1 exercise
  */
-public class Encryptor {
+public class Encryptor {// TODO: 27/06/2016 change class to app or something, and create different class for enc. or dec.
     public static void main(String[] args)
     {
         System.out.println("Type 'e' for encryption, or type 'd' for decryption");
         Scanner scanner = new Scanner(System.in);
         File file;
+        FileOpener fileOpener = new FileOpener();
 
         String inp = scanner.nextLine();//scan for user input
         if (inp.equals("e") || inp.equals("E"))//encryption
         {
-            file = openFile();
+//            file = openFile();
+            file = fileOpener.OpenFile(System.in, System.out);
             System.out.println("$file$: encrypted file");
         }
         else if (inp.toLowerCase().equals("d"))//decryption
         {
-            file = openFile();
+//            file = openFile();
+            file = fileOpener.OpenFile(System.in, System.out);
             System.out.println("$file$: decrypted file");
         }
         else
