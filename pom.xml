@@ -52,7 +52,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>javatraining.Encryptor</mainClass>
+                            <mainClass>javatraining.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
