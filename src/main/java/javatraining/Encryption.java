@@ -6,6 +6,10 @@ import lombok.val;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Random;
 
 /**
@@ -24,17 +28,40 @@ public class Encryption {
 
         File cypher = new File(file.getAbsolutePath() + ".encrypted");//create encrypted file
         try {
-            @Cleanup FileInputStream fileInputStream = new FileInputStream(file);
-            @Cleanup FileOutputStream fileOutputStream = new FileOutputStream(cypher);
+//            @Cleanup FileInputStream fileInputStream = new FileInputStream(file);
+//            @Cleanup FileOutputStream fileOutputStream = new FileOutputStream(cypher);
+//
+//            byte b = 1;
+//
+//            while ((b = (byte) fileInputStream.read())!= -1)//read byte after byte until end of file
+//            {
+//                fileOutputStream.write(((b + key) % 256));
+//            }
 
-            byte b = 1;
+            byte[] data = Files.readAllBytes(file.toPath());//file to bytes
 
-            while ((b = (byte) fileInputStream.read())!= -1)//read byte after byte until end of file
+            for (int i=0; i<data.length; i++)//encrypt
             {
-                fileOutputStream.write(((b + key) % 256));
+                data[i] = (byte) ((data[i] + key) % 256);
             }
+//            File cypher = new File("C:\\Users\\shimi\\Desktop\\Untitled-5.jpg.encrypted");
+            Files.write(cypher.toPath(), data);
+
+
             System.out.println("An encrypted file has been created!");
             System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
+
+
+            ////////////////////////// decryption //////////////////////
+
+            File plain = new File("C:\\Users\\shimi\\Desktop\\Untitled-5_decrypted.jpg");
+            for (int i=0; i<data.length; i++)
+            {
+                data[i] = (byte) ((data[i] - key) % 256);
+            }
+            Files.write(Paths.get("C:\\Users\\shimi\\Desktop\\Untitled-5_decrypted.jpg"), data);
+
+            ////////////////////////////////////////////////////////////
 
         }
         catch (Exception e) {
@@ -51,5 +78,40 @@ public class Encryption {
         byte[] b = new byte[1];
         random.nextBytes(b);
         return b[0];
+    }
+
+    public static void enc(){
+        Path path = Paths.get("C:\\Users\\shimi\\Desktop\\Untitled-5.jpg");
+
+        byte key = randKey();
+        System.out.println("Key is: " + key);
+
+        try {
+            byte[] data = Files.readAllBytes(path);
+//            for (byte b:data) {
+//                b = (byte) ((b + key) % 256);
+//            }
+            for (int i=0; i<data.length; i++)
+            {
+                data[i] = (byte) ((data[i] + key) % 256);
+            }
+            File cypher = new File("C:\\Users\\shimi\\Desktop\\Untitled-5.jpg.encrypted");
+            Files.write(Paths.get("C:\\Users\\shimi\\Desktop\\Untitled-5.jpg.encrypted"), data);
+
+
+
+
+            File plain = new File("C:\\Users\\shimi\\Desktop\\Untitled-5_decrypted.jpg");
+            for (int i=0; i<data.length; i++)
+            {
+                data[i] = (byte) ((data[i] - key) % 256);
+            }
+            Files.write(Paths.get("C:\\Users\\shimi\\Desktop\\Untitled-5_decrypted.jpg"), data);
+        }
+        catch (IOException e)
+        {
+            System.out.println("IO Exception");
+        }
+
     }
 }

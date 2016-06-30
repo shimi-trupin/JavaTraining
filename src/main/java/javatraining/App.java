@@ -21,7 +21,9 @@ public class App {
 //            file = openFile();
 //            file = fileOpener.OpenFile(System.in, System.out);
 //            System.out.println("$file$: encrypted file");
+
             Encryption.Encrypt();
+//            Encryption.enc();
         }
         else if (inp.toLowerCase().equals("d"))//decryption
         {
