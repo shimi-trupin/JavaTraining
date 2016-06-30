@@ -1,5 +1,6 @@
 package javatraining;
 
+import lombok.Cleanup;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
@@ -29,8 +30,8 @@ public class FileOpenerTest {
 
         File createdFile = folder.newFile("sampleText.txt");
 
-        PipedOutputStream out = new PipedOutputStream();
-        PipedInputStream in = new PipedInputStream();
+        @Cleanup PipedOutputStream out = new PipedOutputStream();
+        @Cleanup PipedInputStream in = new PipedInputStream();
 
         in.connect(out);
 

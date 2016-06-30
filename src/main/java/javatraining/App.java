@@ -19,8 +19,9 @@ public class App {
         if (inp.equals("e") || inp.equals("E"))//encryption
         {
 //            file = openFile();
-            file = fileOpener.OpenFile(System.in, System.out);
-            System.out.println("$file$: encrypted file");
+//            file = fileOpener.OpenFile(System.in, System.out);
+//            System.out.println("$file$: encrypted file");
+            Encryption.Encrypt();
         }
         else if (inp.toLowerCase().equals("d"))//decryption
         {

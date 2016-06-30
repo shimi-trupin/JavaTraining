@@ -33,8 +33,6 @@ public class FileOpener {
             try {
                 file = new File(path);
                 if (file.exists() && file.isFile()) {
-                    in.close();
-                    out.close();
                     return file;
                 }
                 else out.println("Incorrect path. Try again!");
