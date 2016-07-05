@@ -52,17 +52,6 @@ public class Encryption {
             System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
 
 
-            ////////////////////////// decryption //////////////////////
-
-            File plain = new File("C:\\Users\\shimi\\Desktop\\Untitled-5_decrypted.jpg");
-            for (int i=0; i<data.length; i++)
-            {
-                data[i] = (byte) ((data[i] - key) % 256);
-            }
-            Files.write(Paths.get("C:\\Users\\shimi\\Desktop\\Untitled-5_decrypted.jpg"), data);
-
-            ////////////////////////////////////////////////////////////
-
         }
         catch (Exception e) {
             System.out.println("Could not write file");

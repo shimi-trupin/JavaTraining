@@ -28,8 +28,9 @@ public class App {
         else if (inp.toLowerCase().equals("d"))//decryption
         {
 //            file = openFile();
-            file = fileOpener.OpenFile(System.in, System.out);
-            System.out.println("$file$: decrypted file");
+//            file = fileOpener.OpenFile(System.in, System.out);
+//            System.out.println("$file$: decrypted file");
+            Decryption.decrypt();
         }
         else
             System.out.println("Incorrect Input");
