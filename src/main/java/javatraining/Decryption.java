@@ -12,7 +12,7 @@ public class Decryption {
 
     public static void decrypt(){
         FileOpener fileOpener = new FileOpener();
-        File file = fileOpener.OpenFile(System.in, System.out);
+        File file = fileOpener.openFile(System.in, System.out);
 
         System.out.println("Enter a key (byte):");
         Scanner scanner = new Scanner(System.in);

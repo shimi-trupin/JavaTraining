@@ -20,7 +20,7 @@ public class FileOpener {
      * @param out output stream
      * @return file that was opened
      */
-    public /*static*/ File OpenFile(InputStream in, PrintStream out) {
+    public /*static*/ File openFile(InputStream in, PrintStream out) {
 
         File file;
         Scanner scanner = new Scanner(in);

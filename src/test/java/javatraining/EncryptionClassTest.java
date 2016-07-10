@@ -14,13 +14,13 @@ import org.junit.rules.TemporaryFolder;
 
 /**
  * Created by shimi on 30/06/2016.
- * Test class for Encryption
+ * Test class for EncryptionClass
  */
-public class EncryptionTest {
+public class EncryptionClassTest {
     @Test
     public void randKeyTest() throws Exception {
         //check that key is generated
-        byte b = Encryption.randKey();
+        byte b = EncryptionClass.randKey();
         assertThat(b, instanceOf(byte.class));
 
     }
