@@ -31,7 +31,8 @@ public class App {
                 case "2":
                     //XOR Algorithm
                     file = fileOpener.openFile(System.in, System.out);
-
+                    Encryption encryption = new Xor();
+                    encryption.encrypt(file);
                     break;
                 case "3":
                     //Multiplication Algorithm
@@ -61,11 +62,16 @@ public class App {
                 case "2":
                     //XOR Algorithm
                     file = fileOpener.openFile(System.in, System.out);
-
+                    System.out.println("Enter key");
+                    key = scanner.nextByte();// TODO: 10/07/2016 throw exception if key is illegal
+                    Encryption encryption = new Xor();
+                    encryption.decrypt(file, key);
                     break;
                 case "3":
                     //Multiplication Algorithm
                     file = fileOpener.openFile(System.in, System.out);
+                    System.out.println("Enter key");
+                    key = scanner.nextByte();// TODO: 10/07/2016 throw exception if key is illegal
 
                     break;
                 default:
