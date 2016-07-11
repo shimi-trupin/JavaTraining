@@ -17,7 +17,7 @@ import org.junit.rules.TemporaryFolder;
  * Test class for EncryptionClass
  */
 public class EncryptionClassTest {
-    @Test
+    /*@Test
     public void randKeyTest() throws Exception {
         //check that key is generated
         byte b = EncryptionClass.randKey();
@@ -37,5 +37,5 @@ public class EncryptionClassTest {
 
         //add functionality test
 
-    }
+    }*/
 }

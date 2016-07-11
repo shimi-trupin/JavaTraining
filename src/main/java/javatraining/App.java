@@ -14,6 +14,7 @@ public class App {
         Scanner scanner = new Scanner(System.in);
         File file;
         Byte key;
+        Encryption encryption;
         FileOpener fileOpener = new FileOpener();
 
         String inp = scanner.nextLine();//scan for user input
@@ -25,18 +26,31 @@ public class App {
                 case "1":
                     //Caesar Algorithm
                     file = fileOpener.openFile(System.in, System.out);
-                    Caesar caesar = new Caesar();
+                    Caesar caesar = new Caesar(new EncryptionBase());
                     caesar.encrypt(file);
+
+                    /*Caesar caesar = new Caesar();
+                    caesar.encrypt(file);*/
+
                     break;
                 case "2":
                     //XOR Algorithm
                     file = fileOpener.openFile(System.in, System.out);
-                    Encryption encryption = new Xor();
-                    encryption.encrypt(file);
+                    Xor xor = new Xor(new EncryptionBase());
+                    xor.encrypt(file);
+
+                    /*encryption = new Xor();
+                    encryption.encrypt(file);*/
+
                     break;
                 case "3":
                     //Multiplication Algorithm
                     file = fileOpener.openFile(System.in, System.out);
+                    Multiplication multiplication = new Multiplication(new EncryptionBase());
+                    multiplication.encrypt(file);
+
+                    /*encryption = new Multiplication();
+                    encryption.encrypt(file);*/
 
                     break;
                 default:
@@ -47,31 +61,54 @@ public class App {
         }
         else if (inp.toLowerCase().equals("d"))//decryption
         {
-            System.out.println("Choose decryption algorithm (enter a number):\n1. Caesar\n2. XOR\n3. Multiplication");
+            System.out.println("Choose decryption algorithm (enter a number):\n" +
+                    "1. Caesar\n" +
+                    "2. XOR\n" +
+                    "3. Multiplication");
             inp = scanner.nextLine();
             switch (inp) {
                 case "1":
                     //Caesar Algorithm
                     file = fileOpener.openFile(System.in, System.out);
                     System.out.println("Enter key");
-                    key = scanner.nextByte();// TODO: 10/07/2016 throw exception if key is illegal
-                    Caesar caesar = new Caesar();
+                    key = scanner.nextByte();
+                    Caesar caesar = new Caesar(new EncryptionBase());
                     caesar.decrypt(file, key);
+//                    Caesar caesar = new Caesar();
+//                    caesar.decrypt(file, key);
 
                     break;
                 case "2":
                     //XOR Algorithm
                     file = fileOpener.openFile(System.in, System.out);
                     System.out.println("Enter key");
-                    key = scanner.nextByte();// TODO: 10/07/2016 throw exception if key is illegal
-                    Encryption encryption = new Xor();
-                    encryption.decrypt(file, key);
+                    key = scanner.nextByte();
+                    Xor xor = new Xor(new EncryptionBase());
+                    xor.decrypt(file, key);
+
+                    /*encryption = new Xor();
+                    encryption.decrypt(file, key);*/
+
                     break;
                 case "3":
                     //Multiplication Algorithm
                     file = fileOpener.openFile(System.in, System.out);
                     System.out.println("Enter key");
-                    key = scanner.nextByte();// TODO: 10/07/2016 throw exception if key is illegal
+                    try {
+                        key = scanner.nextByte();// TODO: 10/07/2016 throw exception if key is illegal
+                        if(key % 2 == 0)
+                        {
+                            throw new IllegalKeyException("Illegal key! Key cannot be divided by 2");
+                        }
+                        Multiplication multiplication = new Multiplication(new EncryptionBase());
+                        multiplication.decrypt(file, key);
+
+                        /*encryption = new Multiplication();
+                        encryption.decrypt(file, key);*/
+
+                    } catch (IllegalKeyException e) {
+                        System.out.println(e.getMessage());
+                    }
 
                     break;
                 default:

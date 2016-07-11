@@ -1,6 +1,8 @@
 package javatraining;
 
 
+import lombok.Getter;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -9,15 +11,19 @@ import java.util.ArrayList;
 /**
  * Created by shimi on 06/07/2016.
  */
-public class Caesar extends EncryptionDecorator implements Subject{
+public class Caesar extends EncryptionDecorator /*implements Subject*/{
 
-    private ArrayList<Observer> observers;
-    private byte key;
+//    private ArrayList<Observer> observers;
+    @Getter private byte key;
+
+    public Caesar(Encryption encryption) {
+        super(encryption);
+    }
 //    private File file;
 
     @Override
     public void encrypt(File file) {
-        super.encrypt(file);
+//        super.encrypt(file);
 
         key = super.randKey();
         System.out.println("The encryption key is: " + key);
@@ -49,8 +55,8 @@ public class Caesar extends EncryptionDecorator implements Subject{
     }
 
     @Override
-    public void decrypt(File file, Byte key) {
-        super.decrypt(file, key);
+    public void decrypt(File file, byte key) {
+//        super.decrypt(file, key);
 
         try {
             byte[] data = Files.readAllBytes(file.toPath());//file to bytes
@@ -66,7 +72,7 @@ public class Caesar extends EncryptionDecorator implements Subject{
             {
                 data[i] = (byte) ((data[i] - key) % 256);
             }
-            Files.write(Paths.get(file_path), data);
+            Files.write(plain.toPath(), data);
 
 
         }
@@ -77,7 +83,7 @@ public class Caesar extends EncryptionDecorator implements Subject{
     }
 
 
-    @Override
+    /*@Override
     public void register(Observer newObserver) {
         // Adds a new observer to the ArrayList
         observers.add(newObserver);
@@ -100,7 +106,7 @@ public class Caesar extends EncryptionDecorator implements Subject{
     @Override
     public void notifyObserver() {
 
-    }
+    }*/
 
 
 }

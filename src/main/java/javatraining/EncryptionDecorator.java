@@ -11,18 +11,25 @@ import java.util.Random;
  */
 public abstract class EncryptionDecorator implements Encryption{
 
+    protected Encryption encryption;
     @Getter private File file;
+
+    public EncryptionDecorator(Encryption encryption)
+    {
+        this.encryption = encryption;
+    }
 
     @Override
     public void encrypt(File file) {
-
-        this.file = file;
+        encryption.encrypt(file);
+//        this.file = file;
 
     }
 
     @Override
-    public void decrypt(File file, Byte key) {
-        this.file = file;
+    public void decrypt(File file, byte key) {
+        encryption.decrypt(file, key);
+//        this.file = file;
     }
 
     public byte randKey(){

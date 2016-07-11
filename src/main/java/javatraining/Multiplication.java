@@ -10,20 +10,20 @@ import java.util.ArrayList;
 /**
  * Created by shimi on 06/07/2016.
  */
-public class Xor extends EncryptionDecorator /*implements Subject*/{
-
-//    private ArrayList<Observer> observers;
+public class Multiplication extends EncryptionDecorator{
     @Getter private byte key;
 
-    public Xor(Encryption encryption) {
+    public Multiplication(Encryption encryption) {
         super(encryption);
     }
+//    private File file;
 
     @Override
     public void encrypt(File file) {
-//        super.encrypt(file);
 
-        key = super.randKey();
+        do {
+            key = super.randKey();
+        } while (key%2 == 0);//make sure key is not divided by 2
         System.out.println("The encryption key is: " + key);
 
         File cypher = new File(file.getAbsolutePath() + ".encrypted");//create encrypted file
@@ -34,7 +34,7 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
 
             for (int i=0; i<data.length; i++)//encrypt
             {
-                data[i] = (byte) (data[i] ^ key);
+                data[i] = (byte) (data[i] * key);
             }
             Files.write(cypher.toPath(), data);
 
@@ -47,12 +47,13 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
         catch (Exception e) {
             System.out.println("Could not write file");
         }
-    }
 
+    }
 
     @Override
     public void decrypt(File file, byte key) {
 //        super.decrypt(file, key);
+        byte decryptionKey = findDecryptionKey();
 
         try {
             byte[] data = Files.readAllBytes(file.toPath());//file to bytes
@@ -66,7 +67,7 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
             File plain = new File(file_path);//create file
             for (int i=0; i<data.length; i++)//write to file with decrypted bytes
             {
-                data[i] = (byte) (data[i] ^ key);
+                data[i] = (byte) (data[i] * decryptionKey);
             }
             Files.write(plain.toPath(), data);
 
@@ -78,30 +79,12 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
 
     }
 
-    /*@Override
-    public void register(Observer newObserver) {
-        // Adds a new observer to the ArrayList
-        observers.add(newObserver);
+    private byte findDecryptionKey()
+    {
+        int num;
+        for (num = Byte.MIN_VALUE; num <= Byte.MAX_VALUE; num++ )
+            if ((byte)((byte) num * key) == 1)
+                break;
+        return  (byte) num;
     }
-
-    @Override
-    public void unregister(Observer deleteObserver) {
-
-        // Get the index of the observer to delete
-        int observerIndex = observers.indexOf(deleteObserver);
-
-        // Print out message (Have to increment index to match)
-        System.out.println("Observer " + (observerIndex+1) + " deleted");
-
-        // Removes observer from the ArrayList
-        observers.remove(observerIndex);
-
-    }
-
-    @Override
-    public void notifyObserver() {
-
-    }*/
-
-
 }
