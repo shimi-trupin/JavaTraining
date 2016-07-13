@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 /**
  * Created by shimi on 06/07/2016.
+ * Multiplication Algorithm.
  */
 public class Multiplication extends EncryptionDecorator{
     @Getter private byte key;
@@ -32,10 +33,16 @@ public class Multiplication extends EncryptionDecorator{
 
             byte[] data = Files.readAllBytes(file.toPath());//file to bytes
 
+            ////////////
+            System.out.println("Before enc: "+ data[0]);
+            ////////////
             for (int i=0; i<data.length; i++)//encrypt
             {
-                data[i] = (byte) (data[i] * key);
+                data[i] = (byte) ((data[i] * key) % 256);
             }
+            ////////////
+            System.out.println("After enc: "+ data[0]);
+            ////////////
             Files.write(cypher.toPath(), data);
 
 
@@ -53,7 +60,7 @@ public class Multiplication extends EncryptionDecorator{
     @Override
     public void decrypt(File file, byte key) {
 //        super.decrypt(file, key);
-        byte decryptionKey = findDecryptionKey();
+        byte decryptionKey = findDecryptionKey(key);
 
         try {
             byte[] data = Files.readAllBytes(file.toPath());//file to bytes
@@ -65,10 +72,17 @@ public class Multiplication extends EncryptionDecorator{
             file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
 
             File plain = new File(file_path);//create file
+            ////////////
+            System.out.println("Before dec: "+ data[0]);
+            System.out.println("DK = " + decryptionKey);
+            ////////////
             for (int i=0; i<data.length; i++)//write to file with decrypted bytes
             {
-                data[i] = (byte) (data[i] * decryptionKey);
+                data[i] = (byte) ((data[i] * decryptionKey) % 256);
             }
+            ////////////
+            System.out.println("After dec: "+ data[0]);
+            ////////////
             Files.write(plain.toPath(), data);
 
 
@@ -79,11 +93,11 @@ public class Multiplication extends EncryptionDecorator{
 
     }
 
-    private byte findDecryptionKey()
+    private byte findDecryptionKey(byte key)
     {
         int num;
         for (num = Byte.MIN_VALUE; num <= Byte.MAX_VALUE; num++ )
-            if ((byte)((byte) num * key) == 1)
+            if ((byte)((num * key) % 256) == 1)
                 break;
         return  (byte) num;
     }
