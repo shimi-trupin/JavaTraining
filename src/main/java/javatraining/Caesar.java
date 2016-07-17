@@ -6,24 +6,29 @@ import lombok.Getter;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Clock;
 import java.util.ArrayList;
 
 /**
  * Created by shimi on 06/07/2016.
  */
-public class Caesar extends EncryptionDecorator /*implements Subject*/{
+public class Caesar extends EncryptionDecorator implements Subject{
 
-//    private ArrayList<Observer> observers;
+    private ArrayList<Observer> observers;
     @Getter private byte key;
 
     public Caesar(Encryption encryption) {
         super(encryption);
+        observers = new ArrayList<>();
     }
 //    private File file;
 
     @Override
     public void encrypt(File file) {
 //        super.encrypt(file);
+
+        setStartTime(System.currentTimeMillis());
+        notifyObserver("Caesar encryption started.");
 
         key = super.randKey();
         System.out.println("The encryption key is: " + key);
@@ -45,7 +50,8 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
             System.out.println("An encrypted file has been created!");
             System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
 
-
+            notifyObserver("Caesar encryption ended.\nTime took: "
+                    + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
         }
         catch (Exception e) {
             System.out.println("Could not write file");
@@ -57,6 +63,8 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
     @Override
     public void decrypt(File file, byte key) {
 //        super.decrypt(file, key);
+        setStartTime(System.currentTimeMillis());
+        notifyObserver("Caesar decryption started.");
 
         try {
             byte[] data = Files.readAllBytes(file.toPath());//file to bytes
@@ -74,6 +82,8 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
             }
             Files.write(plain.toPath(), data);
 
+            notifyObserver("Caesar decryption ended.\nTime took: "
+                    + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
         }
         catch (Exception e) {
@@ -83,7 +93,7 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
     }
 
 
-    /*@Override
+    @Override
     public void register(Observer newObserver) {
         // Adds a new observer to the ArrayList
         observers.add(newObserver);
@@ -104,9 +114,11 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
     }
 
     @Override
-    public void notifyObserver() {
+    public void notifyObserver(String msg) {
+        for (Observer observer: observers)
+            observer.update(msg);
 
-    }*/
+    }
 
 
 }

@@ -7,5 +7,5 @@ import java.time.Clock;
  * http://tempusfugitlibrary.org/documentation/time/clocks/
  */
 public interface Observer {
-    public void update(Clock clock);
+    public void update(String msg);
 }

@@ -8,6 +8,6 @@ import java.time.Clock;
 public interface Subject {
     public void register(Observer observer);
     public void unregister(Observer observer);
-    public void notifyObserver(Clock clock);
+    public void notifyObserver(String msg);
 
 }

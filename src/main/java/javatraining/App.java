@@ -16,6 +16,7 @@ public class App {
         Byte key;
         Encryption encryption;
         FileOpener fileOpener = new FileOpener();
+        StartEndObserver observer = new StartEndObserver();
 
         String inp = scanner.nextLine();//scan for user input
         if (inp.equals("e") || inp.equals("E"))//encryption
@@ -27,6 +28,9 @@ public class App {
                     //Caesar Algorithm
                     file = fileOpener.openFile(System.in, System.out);
                     Caesar caesar = new Caesar(new EncryptionBase());
+
+                    caesar.register(observer);
+
                     caesar.encrypt(file);
 
                     /*Caesar caesar = new Caesar();
@@ -73,6 +77,9 @@ public class App {
                     System.out.println("Enter key");
                     key = scanner.nextByte();
                     Caesar caesar = new Caesar(new EncryptionBase());
+
+                    caesar.register(observer);
+
                     caesar.decrypt(file, key);
 //                    Caesar caesar = new Caesar();
 //                    caesar.decrypt(file, key);

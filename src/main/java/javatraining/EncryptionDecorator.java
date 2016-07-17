@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.time.Clock;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -13,10 +16,18 @@ public abstract class EncryptionDecorator implements Encryption{
 
     protected Encryption encryption;
     @Getter private File file;
+    @Getter private Clock clock;
+    @Getter private Date startDate;
+    @Getter @Setter private long startTime;
 
     public EncryptionDecorator(Encryption encryption)
     {
         this.encryption = encryption;
+//        this.startDate = System.currentTimeMillis();
+//        this.startDate = Instant.now(clock);
+//        Instant first = Instant.now();
+//        Instant second = Instant.now();
+//        this.startTime = System.currentTimeMillis();
     }
 
     @Override
