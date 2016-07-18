@@ -22,6 +22,9 @@ public class Multiplication extends EncryptionDecorator{
     @Override
     public void encrypt(File file) {
 
+        setStartTime(System.currentTimeMillis());
+        notifyObserver("Multiplication encryption started.");
+
         do {
             key = super.randKey();
         } while (key%2 == 0);//make sure key is not divided by 2
@@ -33,23 +36,24 @@ public class Multiplication extends EncryptionDecorator{
 
             byte[] data = Files.readAllBytes(file.toPath());//file to bytes
 
-            ////////////
+            /*////////////
             System.out.println("Before enc: "+ data[0]);
-            ////////////
+            ////////////*/
             for (int i=0; i<data.length; i++)//encrypt
             {
                 data[i] = (byte) ((data[i] * key) % 256);
             }
-            ////////////
+           /* ////////////
             System.out.println("After enc: "+ data[0]);
-            ////////////
+            ////////////*/
             Files.write(cypher.toPath(), data);
 
 
             System.out.println("An encrypted file has been created!");
             System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
 
-
+            notifyObserver("Multiplication encryption ended.\nTime took: "
+                    + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
         }
         catch (Exception e) {
             System.out.println("Could not write file");
@@ -60,6 +64,9 @@ public class Multiplication extends EncryptionDecorator{
     @Override
     public void decrypt(File file, byte key) {
 //        super.decrypt(file, key);
+        setStartTime(System.currentTimeMillis());
+        notifyObserver("Multiplication decryption started.");
+
         byte decryptionKey = findDecryptionKey(key);
 
         try {
@@ -72,19 +79,21 @@ public class Multiplication extends EncryptionDecorator{
             file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
 
             File plain = new File(file_path);//create file
-            ////////////
+            /*////////////
             System.out.println("Before dec: "+ data[0]);
             System.out.println("DK = " + decryptionKey);
-            ////////////
+            ////////////*/
             for (int i=0; i<data.length; i++)//write to file with decrypted bytes
             {
                 data[i] = (byte) ((data[i] * decryptionKey) % 256);
             }
-            ////////////
+            /*////////////
             System.out.println("After dec: "+ data[0]);
-            ////////////
+            ////////////*/
             Files.write(plain.toPath(), data);
 
+            notifyObserver("Multiplication decryption ended.\nTime took: "
+                    + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
         }
         catch (Exception e) {

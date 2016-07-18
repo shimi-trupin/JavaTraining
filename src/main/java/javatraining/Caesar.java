@@ -12,14 +12,14 @@ import java.util.ArrayList;
 /**
  * Created by shimi on 06/07/2016.
  */
-public class Caesar extends EncryptionDecorator implements Subject{
+public class Caesar extends EncryptionDecorator /*implements Subject*/{
 
-    private ArrayList<Observer> observers;
+//    private ArrayList<Observer> observers;
     @Getter private byte key;
 
     public Caesar(Encryption encryption) {
         super(encryption);
-        observers = new ArrayList<>();
+//        observers = new ArrayList<>();
     }
 //    private File file;
 
@@ -93,7 +93,7 @@ public class Caesar extends EncryptionDecorator implements Subject{
     }
 
 
-    @Override
+    /*@Override
     public void register(Observer newObserver) {
         // Adds a new observer to the ArrayList
         observers.add(newObserver);
@@ -118,7 +118,7 @@ public class Caesar extends EncryptionDecorator implements Subject{
         for (Observer observer: observers)
             observer.update(msg);
 
-    }
+    }*/
 
 
 }

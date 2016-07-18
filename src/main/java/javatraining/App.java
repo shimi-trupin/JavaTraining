@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 /**
  * Created by shimi on 30/05/2016.
- * Chapter 1 exercise
+ * Driver of the program
  */
 public class App {
     public static void main(String[] args)
@@ -41,6 +41,7 @@ public class App {
                     //XOR Algorithm
                     file = fileOpener.openFile(System.in, System.out);
                     Xor xor = new Xor(new EncryptionBase());
+                    xor.register(observer);
                     xor.encrypt(file);
 
                     /*encryption = new Xor();
@@ -51,6 +52,7 @@ public class App {
                     //Multiplication Algorithm
                     file = fileOpener.openFile(System.in, System.out);
                     Multiplication multiplication = new Multiplication(new EncryptionBase());
+                    multiplication.register(observer);
                     multiplication.encrypt(file);
 
                     /*encryption = new Multiplication();
@@ -91,6 +93,7 @@ public class App {
                     System.out.println("Enter key");
                     key = scanner.nextByte();
                     Xor xor = new Xor(new EncryptionBase());
+                    xor.register(observer);
                     xor.decrypt(file, key);
 
                     /*encryption = new Xor();
@@ -108,6 +111,7 @@ public class App {
                             throw new IllegalKeyException("Illegal key! Key cannot be divided by 2");
                         }
                         Multiplication multiplication = new Multiplication(new EncryptionBase());
+                        multiplication.register(observer);
                         multiplication.decrypt(file, key);
 
                         /*encryption = new Multiplication();

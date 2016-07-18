@@ -23,6 +23,9 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
     public void encrypt(File file) {
 //        super.encrypt(file);
 
+        setStartTime(System.currentTimeMillis());
+        notifyObserver("XOR encryption started.");
+
         key = super.randKey();
         System.out.println("The encryption key is: " + key);
 
@@ -42,7 +45,8 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
             System.out.println("An encrypted file has been created!");
             System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
 
-
+            notifyObserver("XOR encryption ended.\nTime took: "
+                    + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
         }
         catch (Exception e) {
             System.out.println("Could not write file");
@@ -53,6 +57,8 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
     @Override
     public void decrypt(File file, byte key) {
 //        super.decrypt(file, key);
+        setStartTime(System.currentTimeMillis());
+        notifyObserver("XOR decryption started.");
 
         try {
             byte[] data = Files.readAllBytes(file.toPath());//file to bytes
@@ -70,6 +76,8 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
             }
             Files.write(plain.toPath(), data);
 
+            notifyObserver("XOR decryption ended.\nTime took: "
+                    + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
         }
         catch (Exception e) {
