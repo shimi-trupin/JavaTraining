@@ -1,6 +1,8 @@
 package javatraining;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 /**
@@ -58,6 +60,13 @@ public class App {
                     /*encryption = new Multiplication();
                     encryption.encrypt(file);*/
 
+                    break;
+                case "4":
+                    file = fileOpener.openFile(System.in, System.out);
+                    Xor xor1 = new Xor(new EncryptionBase());
+                    Caesar caesar1 = new Caesar(new EncryptionBase());
+                    Double<Encryption> caesarXor = new Double<Encryption>(caesar1, xor1);
+                    caesarXor.encrypt(file);
                     break;
                 default:
                     System.out.println("Wrong Input! make sure you enter the right number.");
@@ -121,6 +130,24 @@ public class App {
                         System.out.println(e.getMessage());
                     }
 
+                    break;
+                case "4":
+                    file = fileOpener.openFile(System.in, System.out);
+                    System.out.println("You also need to enter the 'key.bin' file location.");
+                    File keysFile = fileOpener.openFile(System.in, System.out);
+
+                    try {
+                        byte[] keys = Files.readAllBytes(keysFile.toPath());//file to bytes
+
+                        Xor xor1 = new Xor(new EncryptionBase());
+                        Caesar caesar1 = new Caesar(new EncryptionBase());
+                        Double<Encryption> caesarXor = new Double<Encryption>(caesar1, xor1);
+
+                        caesarXor.decrypt(file, keys);
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     System.out.println("Wrong Input! make sure you enter the right number.");

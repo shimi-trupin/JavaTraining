@@ -24,16 +24,19 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
 //    private File file;
 
     @Override
-    public void encrypt(File file) {
+    public EncryptionResult encrypt(File file) {
 //        super.encrypt(file);
 
         setStartTime(System.currentTimeMillis());
         notifyObserver("Caesar encryption started.");
+        File cypher;
 
         key = super.randKey();
         System.out.println("The encryption key is: " + key);
-
-        File cypher = new File(file.getAbsolutePath() + ".encrypted");//create encrypted file
+        if(!file.getAbsolutePath().endsWith(".encrypted")) {
+            cypher = new File(file.getAbsolutePath() + ".encrypted");//create encrypted file
+        }
+        else cypher = file;
 
         try {
 
@@ -52,16 +55,20 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
 
             notifyObserver("Caesar encryption ended.\nTime took: "
                     + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
+
+            return new EncryptionResult(cypher, key);
+
         }
         catch (Exception e) {
             System.out.println("Could not write file");
         }
 
 //        this.file = super.getFile();
+        return null;
     }
 
     @Override
-    public void decrypt(File file, byte key) {
+    public File decrypt(File file, byte key) {
 //        super.decrypt(file, key);
         setStartTime(System.currentTimeMillis());
         notifyObserver("Caesar decryption started.");
@@ -70,12 +77,17 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
             byte[] data = Files.readAllBytes(file.toPath());//file to bytes
 
             String cypher = file.getAbsolutePath();
+            File plain;
 
-            String path = cypher.substring(0, cypher.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
-            String file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
-            file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
+            if(cypher.endsWith(".encrypted")) {
+                String path = cypher.substring(0, cypher.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
+                String file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
+                file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
 
-            File plain = new File(file_path);//create file
+                plain = new File(file_path);//create file
+            }
+            else plain = file;
+
             for (int i=0; i<data.length; i++)//write to file with decrypted bytes
             {
                 data[i] = (byte) ((data[i] - key) % 256);
@@ -85,11 +97,12 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
             notifyObserver("Caesar decryption ended.\nTime took: "
                     + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
+            return plain;
         }
         catch (Exception e) {
             System.out.println("Could not write file");
         }
-
+        return null;
     }
 
 

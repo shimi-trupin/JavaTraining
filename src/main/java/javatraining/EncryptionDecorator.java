@@ -34,16 +34,18 @@ public abstract class EncryptionDecorator implements Encryption, Subject{
     }
 
     @Override
-    public void encrypt(File file) {
+    public EncryptionResult encrypt(File file) {
         encryption.encrypt(file);
 //        this.file = file;
 
+        return null;
     }
 
     @Override
-    public void decrypt(File file, byte key) {
+    public File decrypt(File file, byte key) {
         encryption.decrypt(file, key);
 //        this.file = file;
+        return null;
     }
 
     public byte randKey(){

@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.ArrayList;
 
 /**
  * Created by shimi on 06/07/2016.
@@ -20,17 +19,21 @@ public class Multiplication extends EncryptionDecorator{
 //    private File file;
 
     @Override
-    public void encrypt(File file) {
+    public EncryptionResult encrypt(File file) {
 
         setStartTime(System.currentTimeMillis());
         notifyObserver("Multiplication encryption started.");
+        File cypher;
 
         do {
             key = super.randKey();
         } while (key%2 == 0);//make sure key is not divided by 2
         System.out.println("The encryption key is: " + key);
 
-        File cypher = new File(file.getAbsolutePath() + ".encrypted");//create encrypted file
+        if(!file.getAbsolutePath().endsWith(".encrypted")) {
+            cypher = new File(file.getAbsolutePath() + ".encrypted");//create encrypted file
+        }
+        else cypher = file;
 
         try {
 
@@ -54,15 +57,18 @@ public class Multiplication extends EncryptionDecorator{
 
             notifyObserver("Multiplication encryption ended.\nTime took: "
                     + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
+
+            return new EncryptionResult(cypher, key);
         }
         catch (Exception e) {
             System.out.println("Could not write file");
         }
 
+        return null;
     }
 
     @Override
-    public void decrypt(File file, byte key) {
+    public File decrypt(File file, byte key) {
 //        super.decrypt(file, key);
         setStartTime(System.currentTimeMillis());
         notifyObserver("Multiplication decryption started.");
@@ -73,12 +79,16 @@ public class Multiplication extends EncryptionDecorator{
             byte[] data = Files.readAllBytes(file.toPath());//file to bytes
 
             String cypher = file.getAbsolutePath();
+            File plain;
 
-            String path = cypher.substring(0, cypher.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
-            String file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
-            file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
+            if(cypher.endsWith(".encrypted")) {
+                String path = cypher.substring(0, cypher.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
+                String file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
+                file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
 
-            File plain = new File(file_path);//create file
+                plain = new File(file_path);//create file
+            }
+            else plain = file;
             /*////////////
             System.out.println("Before dec: "+ data[0]);
             System.out.println("DK = " + decryptionKey);
@@ -95,11 +105,13 @@ public class Multiplication extends EncryptionDecorator{
             notifyObserver("Multiplication decryption ended.\nTime took: "
                     + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
+            return plain;
         }
         catch (Exception e) {
             System.out.println("Could not write file");
         }
 
+        return null;
     }
 
     private byte findDecryptionKey(byte key)

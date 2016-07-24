@@ -9,13 +9,15 @@ import java.util.Random;
 public class EncryptionBase implements Encryption{
 
     @Override
-    public void encrypt(File file) {
+    public EncryptionResult encrypt(File file) {
         //generate random key?
+        return null;
     }
 
     @Override
-    public void decrypt(File file, byte key) {
+    public File decrypt(File file, byte key) {
 
+        return null;
     }
 
     protected byte randKey(){
