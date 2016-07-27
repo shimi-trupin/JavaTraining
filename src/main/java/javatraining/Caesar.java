@@ -3,12 +3,6 @@ package javatraining;
 
 import lombok.Getter;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.Clock;
-import java.util.ArrayList;
-
 /**
  * Created by shimi on 06/07/2016.
  */
@@ -24,59 +18,61 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
 //    private File file;
 
     @Override
-    public EncryptionResult encrypt(File file) {
+    public EncryptionResult encrypt(byte[] data, byte key) {
 //        super.encrypt(file);
 
         setStartTime(System.currentTimeMillis());
         notifyObserver("Caesar encryption started.");
-        File cypher;
+//        File cypher;
 
-        key = super.randKey();
-        System.out.println("The encryption key is: " + key);
-        if(!file.getAbsolutePath().endsWith(".encrypted")) {
-            cypher = new File(file.getAbsolutePath() + ".encrypted");//create encrypted file
-        }
-        else cypher = file;
+//        this.key = super.randKey();
+        this.key = key;
 
-        try {
+        System.out.println("The encryption key is: " + this.key);
+//        if(!data.getAbsolutePath().endsWith(".encrypted")) {
+//            cypher = new File(data.getAbsolutePath() + ".encrypted");//create encrypted file
+//        }
+//        else cypher = data;
 
-            byte[] data = Files.readAllBytes(file.toPath());//file to bytes
+//        try {
+
+//            byte[] data = Files.readAllBytes(data.toPath());//file to bytes
 
             for (int i=0; i<data.length; i++)//encrypt
             {
-                data[i] = (byte) ((data[i] + key) % 256);
+                data[i] = (byte) ((data[i] + this.key) % 256);
             }
 //            File cypher = new File("C:\\Users\\shimi\\Desktop\\Untitled-5.jpg.encrypted");
-            Files.write(cypher.toPath(), data);
+//            Files.write(cypher.toPath(), data);
 
 
-            System.out.println("An encrypted file has been created!");
-            System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
+//            System.out.println("An encrypted file has been created!");
+//            System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
 
             notifyObserver("Caesar encryption ended.\nTime took: "
                     + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
-            return new EncryptionResult(cypher, key);
+            return new EncryptionResult(data, this.key);
 
-        }
-        catch (Exception e) {
-            System.out.println("Could not write file");
-        }
+//        }
+//        catch (Exception e) {
+//            System.out.println("Could not write file");
+//        }
 
 //        this.file = super.getFile();
-        return null;
+//        return null;
     }
 
     @Override
-    public File decrypt(File file, byte key) {
+    public byte[] decrypt(byte[] data, byte key) {
 //        super.decrypt(file, key);
         setStartTime(System.currentTimeMillis());
         notifyObserver("Caesar decryption started.");
 
-        try {
-            byte[] data = Files.readAllBytes(file.toPath());//file to bytes
+/*        try {
+            byte[] data = Files.readAllBytes(data.toPath());//file to bytes
 
-            String cypher = file.getAbsolutePath();
+            String cypher = data.getAbsolutePath();
             File plain;
 
             if(cypher.endsWith(".encrypted")) {
@@ -86,23 +82,23 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
 
                 plain = new File(file_path);//create file
             }
-            else plain = file;
+            else plain = data;*/
 
             for (int i=0; i<data.length; i++)//write to file with decrypted bytes
             {
                 data[i] = (byte) ((data[i] - key) % 256);
             }
-            Files.write(plain.toPath(), data);
+//            Files.write(plain.toPath(), data);
 
             notifyObserver("Caesar decryption ended.\nTime took: "
                     + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
-            return plain;
-        }
+            return data;
+        /*}
         catch (Exception e) {
             System.out.println("Could not write file");
         }
-        return null;
+        return null;*/
     }
 
 

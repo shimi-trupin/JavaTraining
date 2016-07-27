@@ -19,66 +19,68 @@ public class Multiplication extends EncryptionDecorator{
 //    private File file;
 
     @Override
-    public EncryptionResult encrypt(File file) {
+    public EncryptionResult encrypt(byte[] data, byte key) {
 
         setStartTime(System.currentTimeMillis());
         notifyObserver("Multiplication encryption started.");
         File cypher;
 
-        do {
-            key = super.randKey();
-        } while (key%2 == 0);//make sure key is not divided by 2
-        System.out.println("The encryption key is: " + key);
+        /*do {
+            this.key = super.randKey();
+        } while (this.key %2 == 0);//make sure key is not divided by 2*/
+        this.key = key;
 
-        if(!file.getAbsolutePath().endsWith(".encrypted")) {
-            cypher = new File(file.getAbsolutePath() + ".encrypted");//create encrypted file
+        System.out.println("The encryption key is: " + this.key);
+
+        /*if(!data.getAbsolutePath().endsWith(".encrypted")) {
+            cypher = new File(data.getAbsolutePath() + ".encrypted");//create encrypted file
         }
-        else cypher = file;
+        else cypher = data;
 
         try {
 
-            byte[] data = Files.readAllBytes(file.toPath());//file to bytes
-
+            byte[] data = Files.readAllBytes(data.toPath());//file to bytes
+*/
             /*////////////
             System.out.println("Before enc: "+ data[0]);
             ////////////*/
             for (int i=0; i<data.length; i++)//encrypt
             {
-                data[i] = (byte) ((data[i] * key) % 256);
+                data[i] = (byte) ((data[i] * this.key) % 256);
             }
            /* ////////////
             System.out.println("After enc: "+ data[0]);
             ////////////*/
-            Files.write(cypher.toPath(), data);
+//            Files.write(cypher.toPath(), data);
 
 
-            System.out.println("An encrypted file has been created!");
-            System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
+//            System.out.println("An encrypted file has been created!");
+//            System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
 
             notifyObserver("Multiplication encryption ended.\nTime took: "
                     + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
-            return new EncryptionResult(cypher, key);
-        }
+            return new EncryptionResult(data, this.key);
+        /*}
         catch (Exception e) {
             System.out.println("Could not write file");
         }
 
-        return null;
+        return null;*/
     }
 
     @Override
-    public File decrypt(File file, byte key) {
+    public byte[] decrypt(byte[] data, byte key) {
 //        super.decrypt(file, key);
         setStartTime(System.currentTimeMillis());
         notifyObserver("Multiplication decryption started.");
 
         byte decryptionKey = findDecryptionKey(key);
 
-        try {
-            byte[] data = Files.readAllBytes(file.toPath());//file to bytes
+        /*try {
+            byte[] data = Files.readAllBytes(data.toPath());//file to bytes
 
-            String cypher = file.getAbsolutePath();
+            String cypher = data.getAbsolutePath();
             File plain;
 
             if(cypher.endsWith(".encrypted")) {
@@ -88,7 +90,7 @@ public class Multiplication extends EncryptionDecorator{
 
                 plain = new File(file_path);//create file
             }
-            else plain = file;
+            else plain = data;*/
             /*////////////
             System.out.println("Before dec: "+ data[0]);
             System.out.println("DK = " + decryptionKey);
@@ -100,18 +102,18 @@ public class Multiplication extends EncryptionDecorator{
             /*////////////
             System.out.println("After dec: "+ data[0]);
             ////////////*/
-            Files.write(plain.toPath(), data);
+//            Files.write(plain.toPath(), data);
 
             notifyObserver("Multiplication decryption ended.\nTime took: "
                     + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
-            return plain;
-        }
+            return data;
+        /*}
         catch (Exception e) {
             System.out.println("Could not write file");
         }
 
-        return null;
+        return null;*/
     }
 
     private byte findDecryptionKey(byte key)

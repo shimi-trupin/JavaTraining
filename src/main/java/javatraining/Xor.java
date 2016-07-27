@@ -19,57 +19,59 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
     }
 
     @Override
-    public EncryptionResult encrypt(File file) {
+    public EncryptionResult encrypt(byte[] data, byte key) {
 //        super.encrypt(file);
 
         setStartTime(System.currentTimeMillis());
         notifyObserver("XOR encryption started.");
         File cypher;
 
-        key = super.randKey();
-        System.out.println("The encryption key is: " + key);
+//        this.key = super.randKey();
+        this.key = key;
 
-        if(!file.getAbsolutePath().endsWith(".encrypted")) {
-            cypher = new File(file.getAbsolutePath() + ".encrypted");//create encrypted file
+        System.out.println("The encryption key is: " + this.key);
+
+        /*if(!data.getAbsolutePath().endsWith(".encrypted")) {
+            cypher = new File(data.getAbsolutePath() + ".encrypted");//create encrypted file
         }
-        else cypher = file;
+        else cypher = data;
 
         try {
 
-            byte[] data = Files.readAllBytes(file.toPath());//file to bytes
+            byte[] data = Files.readAllBytes(data.toPath());//file to bytes*/
 
             for (int i=0; i<data.length; i++)//encrypt
             {
-                data[i] = (byte) (data[i] ^ key);
+                data[i] = (byte) (data[i] ^ this.key);
             }
-            Files.write(cypher.toPath(), data);
+//            Files.write(cypher.toPath(), data);
 
 
-            System.out.println("An encrypted file has been created!");
-            System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
+//            System.out.println("An encrypted file has been created!");
+//            System.out.println("Encrypted file location: " + cypher.getAbsolutePath());
 
             notifyObserver("XOR encryption ended.\nTime took: "
                     + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
-            return new EncryptionResult(cypher, key);
-        }
+            return new EncryptionResult(data, this.key);
+        /*}
         catch (Exception e) {
             System.out.println("Could not write file");
         }
-        return null;
+        return null;*/
     }
 
 
     @Override
-    public File decrypt(File file, byte key) {
+    public byte[] decrypt(byte[] data, byte key) {
 //        super.decrypt(file, key);
         setStartTime(System.currentTimeMillis());
         notifyObserver("XOR decryption started.");
 
-        try {
-            byte[] data = Files.readAllBytes(file.toPath());//file to bytes
+        /*try {
+            byte[] data = Files.readAllBytes(data.toPath());//file to bytes
 
-            String cypher = file.getAbsolutePath();
+            String cypher = data.getAbsolutePath();
 
             File plain;
 
@@ -80,23 +82,23 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
 
                 plain = new File(file_path);//create file
             }
-            else plain = file;
+            else plain = data;*/
 
             for (int i=0; i<data.length; i++)//write to file with decrypted bytes
             {
                 data[i] = (byte) (data[i] ^ key);
             }
-            Files.write(plain.toPath(), data);
+//            Files.write(plain.toPath(), data);
 
             notifyObserver("XOR decryption ended.\nTime took: "
                     + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
-            return plain;
-        }
+            return data;
+        /*}
         catch (Exception e) {
             System.out.println("Could not write file");
         }
-        return null;
+        return null;*/
     }
 
     /*@Override

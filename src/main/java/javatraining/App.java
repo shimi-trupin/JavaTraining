@@ -19,6 +19,9 @@ public class App {
         Encryption encryption;
         FileOpener fileOpener = new FileOpener();
         StartEndObserver observer = new StartEndObserver();
+        byte[] data;
+        EncryptionResult encryptionResult;
+        String path, file_path;
 
         String inp = scanner.nextLine();//scan for user input
         if (inp.equals("e") || inp.equals("E"))//encryption
@@ -33,7 +36,17 @@ public class App {
 
                     caesar.register(observer);
 
-                    caesar.encrypt(file);
+                    try {
+                        encryptionResult = caesar.encrypt(Files.readAllBytes(file.toPath()), KeyGen.randKey());
+
+                        data = encryptionResult.getData();
+                        path = file.getAbsolutePath() + ".encrypted";//add .encrypted to end of file name
+
+                        new FileCreator().creatFile(path, data);
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     /*Caesar caesar = new Caesar();
                     caesar.encrypt(file);*/
@@ -44,7 +57,17 @@ public class App {
                     file = fileOpener.openFile(System.in, System.out);
                     Xor xor = new Xor(new EncryptionBase());
                     xor.register(observer);
-                    xor.encrypt(file);
+                    try {
+                        encryptionResult = xor.encrypt(Files.readAllBytes(file.toPath()), KeyGen.randKey());
+
+                        data = encryptionResult.getData();
+                        path = file.getAbsolutePath() + ".encrypted";//add .encrypted to end of file name
+
+                        new FileCreator().creatFile(path, data);
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     /*encryption = new Xor();
                     encryption.encrypt(file);*/
@@ -55,19 +78,35 @@ public class App {
                     file = fileOpener.openFile(System.in, System.out);
                     Multiplication multiplication = new Multiplication(new EncryptionBase());
                     multiplication.register(observer);
-                    multiplication.encrypt(file);
+//                    multiplication.encrypt(file, KeyGen.randOddKey());
 
+                    try {
+                        encryptionResult = multiplication.encrypt(Files.readAllBytes(file.toPath()), KeyGen.randOddKey());
+
+                        data = encryptionResult.getData();
+                        path = file.getAbsolutePath() + ".encrypted";//add .encrypted to end of file name
+
+                        new FileCreator().creatFile(path, data);
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     /*encryption = new Multiplication();
                     encryption.encrypt(file);*/
 
                     break;
-                case "4":
+                /*case "4":// TODO: 24/07/2016 add options to menu, add sub selection of algs and rand key (odd if needed)
                     file = fileOpener.openFile(System.in, System.out);
                     Xor xor1 = new Xor(new EncryptionBase());
                     Caesar caesar1 = new Caesar(new EncryptionBase());
                     Double<Encryption> caesarXor = new Double<Encryption>(caesar1, xor1);
-                    caesarXor.encrypt(file);
+                    caesarXor.encrypt(file, KeyGen.randKey(), KeyGen.randKey());
                     break;
+                case "5":
+                    Caesar caesar2 = new Caesar(new EncryptionBase());// TODO: 24/07/2016 write general Caesar caesar, Xor xor before switch case
+                    Reverse<Encryption> encryptionReverse = new Reverse<>(caesar2);
+                    encryptionReverse.encrypt(new FileOpener().openFile(System.in, System.out), KeyGen.randKey());
+                    break;*/
                 default:
                     System.out.println("Wrong Input! make sure you enter the right number.");
                     break;
@@ -91,7 +130,19 @@ public class App {
 
                     caesar.register(observer);
 
-                    caesar.decrypt(file, key);
+                    try {
+                        data = caesar.decrypt(Files.readAllBytes(file.toPath()), key);
+
+                        path = file.getAbsolutePath(); // TODO: 25/07/2016 finish this part
+                        path = path.substring(0, path.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
+                        file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
+                        file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
+
+                        new FileCreator().creatFile(file_path, data);
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
 //                    Caesar caesar = new Caesar();
 //                    caesar.decrypt(file, key);
 
@@ -103,7 +154,19 @@ public class App {
                     key = scanner.nextByte();
                     Xor xor = new Xor(new EncryptionBase());
                     xor.register(observer);
-                    xor.decrypt(file, key);
+                    try {
+                        data = xor.decrypt(Files.readAllBytes(file.toPath()), key);
+
+                        path = file.getAbsolutePath();
+                        path = path.substring(0, path.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
+                        file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
+                        file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
+
+                        new FileCreator().creatFile(file_path, data);
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     /*encryption = new Xor();
                     encryption.decrypt(file, key);*/
@@ -114,14 +177,26 @@ public class App {
                     file = fileOpener.openFile(System.in, System.out);
                     System.out.println("Enter key");
                     try {
-                        key = scanner.nextByte();// TODO: 10/07/2016 throw exception if key is illegal
+                        key = scanner.nextByte();
                         if(key % 2 == 0)
                         {
                             throw new IllegalKeyException("Illegal key! Key cannot be divided by 2");
                         }
                         Multiplication multiplication = new Multiplication(new EncryptionBase());
                         multiplication.register(observer);
-                        multiplication.decrypt(file, key);
+                        try {
+                            data = multiplication.decrypt(Files.readAllBytes(file.toPath()), key);
+
+                            path = file.getAbsolutePath();
+                            path = path.substring(0, path.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
+                            file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
+                            file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
+
+                            new FileCreator().creatFile(file_path, data);
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
                         /*encryption = new Multiplication();
                         encryption.decrypt(file, key);*/
@@ -131,7 +206,7 @@ public class App {
                     }
 
                     break;
-                case "4":
+                /*case "4":
                     file = fileOpener.openFile(System.in, System.out);
                     System.out.println("You also need to enter the 'key.bin' file location.");
                     File keysFile = fileOpener.openFile(System.in, System.out);
@@ -148,7 +223,7 @@ public class App {
                     catch (IOException e) {
                         e.printStackTrace();
                     }
-                    break;
+                    break;*/
                 default:
                     System.out.println("Wrong Input! make sure you enter the right number.");
                     break;

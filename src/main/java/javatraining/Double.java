@@ -5,7 +5,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -26,33 +25,50 @@ public class Double<T extends Encryption>  extends EncryptionDecorator{
     }
     // todo overrise supers encrypt and decrypt woth awsome logic much brains such wow.
 
-    @Override
-    public EncryptionResult encrypt(File file) {
+//    @Override
+    public void encrypt(File file, byte key1, byte key2) {
         EncryptionResult encryptionResult;
-        encryptionResult = encryption.encrypt(file);
-
-        String path = encryptionResult.getFile().getParent() + "\\key.bin";
-        byte key1 = encryptionResult.getKey();
-
-        encryptionResult = second.encrypt(encryptionResult.getFile());
-
-        byte key2 = encryptionResult.getKey();
-        byte keys[] = {key1, key2};
         try {
+            encryptionResult = encryption.encrypt(Files.readAllBytes(file.toPath()), KeyGen.randKey());
+            String path = file.getParent() + "\\key.bin";// TODO: 25/07/2016 serialization
+            byte keys[] = {key1, key2};
             Files.write(Paths.get(path), keys);
-        } catch (IOException e) {
+
+            path = file.getPath() + ".encrypted";
+            Files.write(Paths.get(path), encryptionResult.getData());
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+
+//        String path = encryptionResult.getFile().getParent() + "\\key.bin";
+//        byte key1 = encryptionResult.getKey();
+
+//        encryptionResult = second.encrypt(encryptionResult.getFile(), KeyGen.randKey());
+
+//        byte key2 = encryptionResult.getKey();
+//        byte keys[] = {key1, key2};
+//        try {
+//            Files.write(Paths.get(path), keys);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
     }
 
     /*@Override*/
     public void decrypt(File file, byte[] keys) {
 //        super.decrypt(file, key);
-        File partiallyDecrypted;
+        byte[] partiallyDecrypted;
 
-        partiallyDecrypted = second.decrypt(file, keys[1]);
+        try {
+            partiallyDecrypted = second.decrypt(Files.readAllBytes(file.toPath()), keys[1]);
+            encryption.decrypt(partiallyDecrypted, keys[0]);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        encryption.decrypt(partiallyDecrypted, keys[0]);
+//        encryption.decrypt(partiallyDecrypted, keys[0]);
     }
 }

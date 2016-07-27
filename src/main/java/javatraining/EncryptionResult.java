@@ -12,11 +12,11 @@ import java.io.File;
  */
 public class EncryptionResult {
 
-    @Getter @Setter private File file;
+    @Getter @Setter private byte[] data;
     @Getter @Setter private byte key;
 
-    public EncryptionResult(File file, byte key) {
-        this.file = file;
+    public EncryptionResult(byte[] data, byte key) {
+        this.data = data;
         this.key = key;
     }
 }

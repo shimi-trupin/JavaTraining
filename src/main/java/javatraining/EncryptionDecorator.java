@@ -5,7 +5,6 @@ import lombok.Setter;
 
 import java.io.File;
 import java.time.Clock;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -34,16 +33,16 @@ public abstract class EncryptionDecorator implements Encryption, Subject{
     }
 
     @Override
-    public EncryptionResult encrypt(File file) {
-        encryption.encrypt(file);
+    public EncryptionResult encrypt(byte[] data, byte key) {
+        encryption.encrypt(data, key);
 //        this.file = file;
 
         return null;
     }
 
     @Override
-    public File decrypt(File file, byte key) {
-        encryption.decrypt(file, key);
+    public byte[] decrypt(byte[] data, byte key) {
+        encryption.decrypt(data, key);
 //        this.file = file;
         return null;
     }

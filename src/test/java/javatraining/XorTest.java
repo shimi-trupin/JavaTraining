@@ -29,11 +29,11 @@ public class XorTest {
         Files.write(createdFile.toPath(), lines, Charset.forName("UTF-8"));
 
         Xor xor = new Xor(new EncryptionBase());
-        xor.encrypt(createdFile);//encrypt the file
+        xor.encrypt(Files.readAllBytes(createdFile.toPath()), KeyGen.randKey());//encrypt the file
 
         byte key = xor.getKey();
         File cypher = new File(createdFile.getAbsolutePath() + ".encrypted");
-        xor.decrypt(cypher, key);//decrypt the file
+        xor.decrypt(Files.readAllBytes(cypher.toPath()), key);//decrypt the file
         byte[] plain = Files.readAllBytes(Paths.get(createdFile.getAbsolutePath().replace(".txt", "_decrypted.txt")));
         byte[] original = Files.readAllBytes(createdFile.toPath());
         //compare the original file and the decrypted one
