@@ -3,7 +3,9 @@ package javatraining;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -30,9 +32,16 @@ public class Double<T extends Encryption>  extends EncryptionDecorator{
         EncryptionResult encryptionResult;
         try {
             encryptionResult = encryption.encrypt(Files.readAllBytes(file.toPath()), KeyGen.randKey());
-            String path = file.getParent() + "\\key.bin";// TODO: 25/07/2016 serialization
-            byte keys[] = {key1, key2};
-            Files.write(Paths.get(path), keys);
+            String path = file.getParent() + "\\key.bin";
+            // TODO: 25/07/2016 serialization
+            Keys keys = new Keys(key1, key2);
+            FileOutputStream fileOut = new FileOutputStream(path);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(keys);
+            out.close();
+            fileOut.close();
+            /*byte keys[] = {key1, key2};
+            Files.write(Paths.get(path), keys);*/
 
             path = file.getPath() + ".encrypted";
             Files.write(Paths.get(path), encryptionResult.getData());

@@ -46,7 +46,7 @@ public class Split<T extends Encryption> extends EncryptionDecorator{
             encryptionResult = encryption.encrypt(even, key2);
             even = encryptionResult.getData();
 
-            //join odd and even bytes together
+            //merge odd and even bytes together
             for (int i=0, j=0; i< odd.length; i++)
             {
                 data[j++] = even[i];
@@ -70,7 +70,7 @@ public class Split<T extends Encryption> extends EncryptionDecorator{
 
             //write '.encrypted' file
             path = file.getPath() + ".encrypted";
-            Files.write(Paths.get(path), encryptionResult.getData());
+            Files.write(Paths.get(path), data);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -80,7 +80,6 @@ public class Split<T extends Encryption> extends EncryptionDecorator{
 
 
     public byte[] decrypt(byte[] data, Keys keys) {
-//        return super.decrypt(data, key);
 
         byte odd[], even[];
 
@@ -107,7 +106,7 @@ public class Split<T extends Encryption> extends EncryptionDecorator{
         //encrypt even bytes with key2
         even = encryption.decrypt(even, keys.getKey2());
 
-        //join odd and even bytes together
+        //merge odd and even bytes together
         for (int i=0, j=0; i< odd.length; i++)
         {
             data[j++] = even[i];

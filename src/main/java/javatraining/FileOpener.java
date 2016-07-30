@@ -1,8 +1,6 @@
 package javatraining;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Scanner;
 
 /**
@@ -44,5 +42,27 @@ public class FileOpener {
             }
 
         }
+    }
+
+    public static Keys getKeysDeserialization(String path){
+        Keys keys = null;
+        try
+        {
+            FileInputStream fileIn = new FileInputStream(path);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            keys = (Keys) in.readObject();
+            in.close();
+            fileIn.close();
+        }catch(IOException i)
+        {
+            i.printStackTrace();
+            return null;
+        }catch(ClassNotFoundException c)
+        {
+            System.out.println("Employee class not found");
+            c.printStackTrace();
+            return null;
+        }
+        return keys;
     }
 }

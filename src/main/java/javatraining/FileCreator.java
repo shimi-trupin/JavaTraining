@@ -8,7 +8,7 @@ import java.nio.file.Files;
  * Created by shimi on 25/07/2016.
  */
 public class FileCreator {
-    public File creatFile(String fileName, byte[] data)
+    public File createFile(String fileName, byte[] data)
     {
         File file = new File(fileName);
         try {

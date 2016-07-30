@@ -3,6 +3,7 @@ package javatraining;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 /**
@@ -42,7 +43,7 @@ public class App {
                         data = encryptionResult.getData();
                         path = file.getAbsolutePath() + ".encrypted";//add .encrypted to end of file name
 
-                        new FileCreator().creatFile(path, data);
+                        new FileCreator().createFile(path, data);
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -63,7 +64,7 @@ public class App {
                         data = encryptionResult.getData();
                         path = file.getAbsolutePath() + ".encrypted";//add .encrypted to end of file name
 
-                        new FileCreator().creatFile(path, data);
+                        new FileCreator().createFile(path, data);
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -86,7 +87,7 @@ public class App {
                         data = encryptionResult.getData();
                         path = file.getAbsolutePath() + ".encrypted";//add .encrypted to end of file name
 
-                        new FileCreator().creatFile(path, data);
+                        new FileCreator().createFile(path, data);
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -107,6 +108,12 @@ public class App {
                     Reverse<Encryption> encryptionReverse = new Reverse<>(caesar2);
                     encryptionReverse.encrypt(new FileOpener().openFile(System.in, System.out), KeyGen.randKey());
                     break;*/
+                case "6":
+                    path = "C:\\Users\\shimi\\Desktop\\Untitled-5.jpg";
+                    Caesar caesar1 = new Caesar(new EncryptionBase());
+                    Split<Encryption> split = new Split<>(caesar1);
+                    split.encrypt(new File(path), (byte)1, (byte)2);
+                    break;
                 default:
                     System.out.println("Wrong Input! make sure you enter the right number.");
                     break;
@@ -138,7 +145,7 @@ public class App {
                         file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
                         file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
 
-                        new FileCreator().creatFile(file_path, data);
+                        new FileCreator().createFile(file_path, data);
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -162,7 +169,7 @@ public class App {
                         file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
                         file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
 
-                        new FileCreator().creatFile(file_path, data);
+                        new FileCreator().createFile(file_path, data);
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -192,7 +199,7 @@ public class App {
                             file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
                             file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
 
-                            new FileCreator().creatFile(file_path, data);
+                            new FileCreator().createFile(file_path, data);
                         }
                         catch (IOException e) {
                             e.printStackTrace();
@@ -224,6 +231,22 @@ public class App {
                         e.printStackTrace();
                     }
                     break;*/
+                case "6":
+                    try {
+                        byte[] data1 = Files.readAllBytes(Paths.get("C:\\Users\\shimi\\Desktop\\Untitled-5.jpg.encrypted"));
+                        /*System.out.println("before:");
+                        for (byte b: data1)
+                            System.out.println(b);*/
+                        Keys keys = FileOpener.getKeysDeserialization("C:\\Users\\shimi\\Desktop\\key.bin");
+                        System.out.println(keys.getKey1() + " , " + keys.getKey2());
+                        Caesar caesar1 = new Caesar(new EncryptionBase());
+                        Split<Encryption> split = new Split<>(caesar1);
+                        data1 = split.decrypt(data1, keys);
+                        new FileCreator().createFile("C:\\Users\\shimi\\Desktop\\Untitled-5_decrypted.jpg", data1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 default:
                     System.out.println("Wrong Input! make sure you enter the right number.");
                     break;
