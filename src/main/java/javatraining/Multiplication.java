@@ -4,14 +4,14 @@ package javatraining;
 import lombok.Getter;
 
 import java.io.File;
-import java.nio.file.Files;
+import java.util.List;
 
 /**
  * Created by shimi on 06/07/2016.
  * Multiplication Algorithm.
  */
 public class Multiplication extends EncryptionDecorator{
-    @Getter private byte key;
+    @Getter private List<Byte> key;
 
     public Multiplication(Encryption encryption) {
         super(encryption);
@@ -19,7 +19,7 @@ public class Multiplication extends EncryptionDecorator{
 //    private File file;
 
     @Override
-    public EncryptionResult encrypt(byte[] data, byte key) {
+    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
 
         setStartTime(System.currentTimeMillis());
         notifyObserver("Multiplication encryption started.");
@@ -46,7 +46,7 @@ public class Multiplication extends EncryptionDecorator{
             ////////////*/
             for (int i=0; i<data.length; i++)//encrypt
             {
-                data[i] = (byte) ((data[i] * this.key) % 256);
+                data[i] = (byte) ((data[i] * this.key.get(0)) % 256);
             }
            /* ////////////
             System.out.println("After enc: "+ data[0]);
@@ -70,12 +70,12 @@ public class Multiplication extends EncryptionDecorator{
     }
 
     @Override
-    public byte[] decrypt(byte[] data, byte key) {
+    public byte[] decrypt(byte[] data, List<Byte> key) {
 //        super.decrypt(file, key);
         setStartTime(System.currentTimeMillis());
         notifyObserver("Multiplication decryption started.");
 
-        byte decryptionKey = findDecryptionKey(key);
+        byte decryptionKey = findDecryptionKey(key.get(0));
 
         /*try {
             byte[] data = Files.readAllBytes(data.toPath());//file to bytes

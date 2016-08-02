@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by shimi on 23/07/2016.
@@ -13,9 +14,10 @@ import java.io.File;
 public class EncryptionResult {
 
     @Getter @Setter private byte[] data;
-    @Getter @Setter private byte key;
+//    @Getter @Setter private byte key;
+    @Getter @Setter private List<Byte> key;
 
-    public EncryptionResult(byte[] data, byte key) {
+    public EncryptionResult(byte[] data, List<Byte> key) {
         this.data = data;
         this.key = key;
     }

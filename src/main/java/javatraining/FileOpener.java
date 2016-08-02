@@ -1,6 +1,8 @@
 package javatraining;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -44,13 +46,13 @@ public class FileOpener {
         }
     }
 
-    public static Keys getKeysDeserialization(String path){
-        Keys keys = null;
+    public static List<Byte> getKeysDeserialization(String path){
+        List<Byte> keys;
         try
         {
             FileInputStream fileIn = new FileInputStream(path);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            keys = (Keys) in.readObject();
+            keys = (List<Byte>) in.readObject();
             in.close();
             fileIn.close();
         }catch(IOException i)
@@ -59,10 +61,21 @@ public class FileOpener {
             return null;
         }catch(ClassNotFoundException c)
         {
-            System.out.println("Employee class not found");
+            System.out.println("key not found");
             c.printStackTrace();
             return null;
         }
         return keys;
+    }
+
+    public static List<File> getDirFiles(File dir){
+        List<File> files = new ArrayList<>();
+        for (File file : dir.listFiles())
+        {
+            if (file.isFile())
+                files.add(file);
+        }
+
+        return files;
     }
 }

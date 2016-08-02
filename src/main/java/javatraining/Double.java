@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by shimi on 19/07/2016.
@@ -27,8 +29,39 @@ public class Double<T extends Encryption>  extends EncryptionDecorator{
     }
     // todo overrise supers encrypt and decrypt woth awsome logic much brains such wow.
 
-//    @Override
-    public void encrypt(File file, byte key1, byte key2) {
+
+    @Override
+    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
+        EncryptionResult encryptionResult;
+        List<Byte> keyList = new ArrayList<>();
+        keyList.add(key.get(0));
+        encryptionResult = encryption.encrypt(data, keyList);
+
+        keyList.remove(0);
+        keyList.add(key.get(1));
+
+        data = encryptionResult.getData();
+        encryptionResult = second.encrypt(data, keyList);
+
+        encryptionResult.setKey(key);
+        return encryptionResult;
+    }
+
+    @Override
+    public byte[] decrypt(byte[] data, List<Byte> key) {
+        List<Byte> keyList = new ArrayList<>();
+        keyList.add(key.get(1));
+        data = second.decrypt(data, keyList);
+
+        keyList.remove(0);
+        keyList.add(key.get(0));
+        data = encryption.decrypt(data, keyList);
+
+        return data;
+    }
+
+    //    @Override
+    /*public void encrypt(File file, byte key1, byte key2) {
         EncryptionResult encryptionResult;
         try {
             encryptionResult = encryption.encrypt(Files.readAllBytes(file.toPath()), KeyGen.randKey());
@@ -40,8 +73,8 @@ public class Double<T extends Encryption>  extends EncryptionDecorator{
             out.writeObject(keys);
             out.close();
             fileOut.close();
-            /*byte keys[] = {key1, key2};
-            Files.write(Paths.get(path), keys);*/
+            *//*byte keys[] = {key1, key2};
+            Files.write(Paths.get(path), keys);*//*
 
             path = file.getPath() + ".encrypted";
             Files.write(Paths.get(path), encryptionResult.getData());
@@ -63,10 +96,12 @@ public class Double<T extends Encryption>  extends EncryptionDecorator{
 //            e.printStackTrace();
 //        }
 //        return null;
-    }
+    }*/
+
+
 
     /*@Override*/
-    public void decrypt(File file, byte[] keys) {
+    /*public void decrypt(File file, byte[] keys) {
 //        super.decrypt(file, key);
         byte[] partiallyDecrypted;
 
@@ -79,5 +114,5 @@ public class Double<T extends Encryption>  extends EncryptionDecorator{
         }
 
 //        encryption.decrypt(partiallyDecrypted, keys[0]);
-    }
+    }*/
 }

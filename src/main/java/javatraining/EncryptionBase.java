@@ -1,5 +1,6 @@
 package javatraining;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -8,13 +9,13 @@ import java.util.Random;
 public class EncryptionBase implements Encryption{
 
     @Override
-    public EncryptionResult encrypt(byte[] data, byte key) {
+    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
         //generate random key?
         return null;
     }
 
     @Override
-    public byte[] decrypt(byte[] data, byte key) {
+    public byte[] decrypt(byte[] data, List<Byte> key) {
 
         return null;
     }

@@ -3,13 +3,15 @@ package javatraining;
 
 import lombok.Getter;
 
+import java.util.List;
+
 /**
  * Created by shimi on 06/07/2016.
  */
 public class Caesar extends EncryptionDecorator /*implements Subject*/{
 
 //    private ArrayList<Observer> observers;
-    @Getter private byte key;
+    @Getter private List<Byte> key;
 
     public Caesar(Encryption encryption) {
         super(encryption);
@@ -18,7 +20,7 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
 //    private File file;
 
     @Override
-    public EncryptionResult encrypt(byte[] data, byte key) {
+    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
 //        super.encrypt(file);
 
         setStartTime(System.currentTimeMillis());
@@ -40,7 +42,7 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
 
             for (int i=0; i<data.length; i++)//encrypt
             {
-                data[i] = (byte) ((data[i] + this.key) % 256);
+                data[i] = (byte) ((data[i] + this.key.get(0)) % 256);
             }
 //            File cypher = new File("C:\\Users\\shimi\\Desktop\\Untitled-5.jpg.encrypted");
 //            Files.write(cypher.toPath(), data);
@@ -64,7 +66,7 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
     }
 
     @Override
-    public byte[] decrypt(byte[] data, byte key) {
+    public byte[] decrypt(byte[] data, List<Byte> key) {
 //        super.decrypt(file, key);
         setStartTime(System.currentTimeMillis());
         notifyObserver("Caesar decryption started.");
@@ -86,7 +88,7 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
 
             for (int i=0; i<data.length; i++)//write to file with decrypted bytes
             {
-                data[i] = (byte) ((data[i] - key) % 256);
+                data[i] = (byte) ((data[i] - key.get(0)) % 256);
             }
 //            Files.write(plain.toPath(), data);
 

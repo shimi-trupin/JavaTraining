@@ -7,6 +7,7 @@ import java.io.File;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -33,7 +34,7 @@ public abstract class EncryptionDecorator implements Encryption, Subject{
     }
 
     @Override
-    public EncryptionResult encrypt(byte[] data, byte key) {
+    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
         encryption.encrypt(data, key);
 //        this.file = file;
 
@@ -41,7 +42,7 @@ public abstract class EncryptionDecorator implements Encryption, Subject{
     }
 
     @Override
-    public byte[] decrypt(byte[] data, byte key) {
+    public byte[] decrypt(byte[] data, List<Byte> key) {
         encryption.decrypt(data, key);
 //        this.file = file;
         return null;

@@ -4,7 +4,7 @@ package javatraining;
 import lombok.Getter;
 
 import java.io.File;
-import java.nio.file.Files;
+import java.util.List;
 
 /**
  * Created by shimi on 06/07/2016.
@@ -12,14 +12,14 @@ import java.nio.file.Files;
 public class Xor extends EncryptionDecorator /*implements Subject*/{
 
 //    private ArrayList<Observer> observers;
-    @Getter private byte key;
+    @Getter private List<Byte> key;
 
     public Xor(Encryption encryption) {
         super(encryption);
     }
 
     @Override
-    public EncryptionResult encrypt(byte[] data, byte key) {
+    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
 //        super.encrypt(file);
 
         setStartTime(System.currentTimeMillis());
@@ -42,7 +42,7 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
 
             for (int i=0; i<data.length; i++)//encrypt
             {
-                data[i] = (byte) (data[i] ^ this.key);
+                data[i] = (byte) (data[i] ^ this.key.get(0));
             }
 //            Files.write(cypher.toPath(), data);
 
@@ -63,7 +63,7 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
 
 
     @Override
-    public byte[] decrypt(byte[] data, byte key) {
+    public byte[] decrypt(byte[] data, List<Byte> key) {
 //        super.decrypt(file, key);
         setStartTime(System.currentTimeMillis());
         notifyObserver("XOR decryption started.");
@@ -86,7 +86,7 @@ public class Xor extends EncryptionDecorator /*implements Subject*/{
 
             for (int i=0; i<data.length; i++)//write to file with decrypted bytes
             {
-                data[i] = (byte) (data[i] ^ key);
+                data[i] = (byte) (data[i] ^ key.get(0));
             }
 //            Files.write(plain.toPath(), data);
 

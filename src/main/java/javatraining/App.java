@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -11,6 +13,9 @@ import java.util.Scanner;
  * Driver of the program
  */
 public class App {
+    private static final int ENCRYPTION = 0;
+    private static final int DECRYPTION = 1;
+
     public static void main(String[] args)
     {
         System.out.println("Type 'e' for encryption, or type 'd' for decryption");
@@ -23,6 +28,12 @@ public class App {
         byte[] data;
         EncryptionResult encryptionResult;
         String path, file_path;
+        List<Byte> keys;
+        FileCreator fileCreator;
+        Caesar caesar;
+        Xor xor;
+        Multiplication multiplication;
+
 
         String inp = scanner.nextLine();//scan for user input
         if (inp.equals("e") || inp.equals("E"))//encryption
@@ -33,18 +44,24 @@ public class App {
                 case "1":
                     //Caesar Algorithm
                     file = fileOpener.openFile(System.in, System.out);
-                    Caesar caesar = new Caesar(new EncryptionBase());
+                    caesar = new Caesar(new EncryptionBase());
+                    keys = new ArrayList<>();
+                    keys.add(KeyGen.randKey());
 
                     caesar.register(observer);
 
                     try {
-                        encryptionResult = caesar.encrypt(Files.readAllBytes(file.toPath()), KeyGen.randKey());
+                        encryptionResult = caesar.encrypt(Files.readAllBytes(file.toPath()), keys);
 
                         data = encryptionResult.getData();
                         path = file.getAbsolutePath() + ".encrypted";//add .encrypted to end of file name
 
-                        new FileCreator().createFile(path, data);
-                    }
+                        fileCreator = new FileCreator();
+                        fileCreator.createFile(path, data);
+
+                        path = path.substring(0, path.lastIndexOf("\\")) + "\\key.bin";
+                        fileCreator.serializeKey(path, keys);
+            }
                     catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -56,15 +73,21 @@ public class App {
                 case "2":
                     //XOR Algorithm
                     file = fileOpener.openFile(System.in, System.out);
-                    Xor xor = new Xor(new EncryptionBase());
+                    xor = new Xor(new EncryptionBase());
+                    keys = new ArrayList<>();
+                    keys.add(KeyGen.randKey());
                     xor.register(observer);
                     try {
-                        encryptionResult = xor.encrypt(Files.readAllBytes(file.toPath()), KeyGen.randKey());
+                        encryptionResult = xor.encrypt(Files.readAllBytes(file.toPath()), keys);
 
                         data = encryptionResult.getData();
                         path = file.getAbsolutePath() + ".encrypted";//add .encrypted to end of file name
 
-                        new FileCreator().createFile(path, data);
+                        fileCreator = new FileCreator();
+                        fileCreator.createFile(path, data);
+
+                        path = path.substring(0, path.lastIndexOf("\\")) + "\\key.bin";
+                        fileCreator.serializeKey(path, keys);
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -77,17 +100,23 @@ public class App {
                 case "3":
                     //Multiplication Algorithm
                     file = fileOpener.openFile(System.in, System.out);
-                    Multiplication multiplication = new Multiplication(new EncryptionBase());
+                    multiplication = new Multiplication(new EncryptionBase());
+                    keys = new ArrayList<>();
+                    keys.add(KeyGen.randOddKey());
                     multiplication.register(observer);
 //                    multiplication.encrypt(file, KeyGen.randOddKey());
 
                     try {
-                        encryptionResult = multiplication.encrypt(Files.readAllBytes(file.toPath()), KeyGen.randOddKey());
+                        encryptionResult = multiplication.encrypt(Files.readAllBytes(file.toPath()), keys);
 
                         data = encryptionResult.getData();
                         path = file.getAbsolutePath() + ".encrypted";//add .encrypted to end of file name
 
-                        new FileCreator().createFile(path, data);
+                        fileCreator = new FileCreator();
+                        fileCreator.createFile(path, data);
+
+                        path = path.substring(0, path.lastIndexOf("\\")) + "\\key.bin";
+                        fileCreator.serializeKey(path, keys);
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -110,16 +139,44 @@ public class App {
                     break;*/
                 case "6":
                     path = "C:\\Users\\shimi\\Desktop\\Untitled-5.jpg";
-                    Caesar caesar1 = new Caesar(new EncryptionBase());
-                    Split<Encryption> split = new Split<>(caesar1);
-                    split.encrypt(new File(path), (byte)1, (byte)2);
+                    caesar = new Caesar(new EncryptionBase());
+                    Split<Encryption> split = new Split<>(caesar);
+                    keys = new ArrayList<>();
+                    keys.add((byte)1);
+                    keys.add((byte)2);
+//                    split.encrypt(new File(path), (byte)1, (byte)2);
+                    try {
+                        encryptionResult = split.encrypt(Files.readAllBytes(Paths.get(path)), keys);
+
+                        data = encryptionResult.getData();
+                        path = /*file.getAbsolutePath()*/ path + ".encrypted";//add .encrypted to end of file name
+
+                        fileCreator = new FileCreator();
+                        fileCreator.createFile(path, data);
+
+                        path = "C:\\Users\\shimi\\Desktop\\key.bin";
+                        fileCreator.serializeKey(path, keys);
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "8":
+                    caesar = new Caesar(new EncryptionBase());
+                    keys = new ArrayList<>();
+                    keys.add(KeyGen.randKey());
+                    SyncDir<Encryption> syncDir = new SyncDir<>(ENCRYPTION, caesar, "C:\\Users\\shimi\\Desktop\\dirTest", keys);
+                    (new Thread(syncDir)).start();
                     break;
                 default:
                     System.out.println("Wrong Input! make sure you enter the right number.");
                     break;
             }
-//            EncryptionClass.Encrypt();
         }
+
+
+
+
         else if (inp.toLowerCase().equals("d"))//decryption
         {
             System.out.println("Choose decryption algorithm (enter a number):\n" +
@@ -131,16 +188,18 @@ public class App {
                 case "1":
                     //Caesar Algorithm
                     file = fileOpener.openFile(System.in, System.out);
-                    System.out.println("Enter key");
-                    key = scanner.nextByte();
-                    Caesar caesar = new Caesar(new EncryptionBase());
+                    System.out.println("Enter source to 'key.bin' file:");
+                    path = scanner.nextLine();
+                    caesar = new Caesar(new EncryptionBase());
+                    keys = FileOpener.getKeysDeserialization(path);
+//                    keys.add(key);
 
                     caesar.register(observer);
 
                     try {
-                        data = caesar.decrypt(Files.readAllBytes(file.toPath()), key);
+                        data = caesar.decrypt(Files.readAllBytes(file.toPath()), keys);
 
-                        path = file.getAbsolutePath(); // TODO: 25/07/2016 finish this part
+                        path = file.getAbsolutePath();
                         path = path.substring(0, path.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
                         file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
                         file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
@@ -159,10 +218,12 @@ public class App {
                     file = fileOpener.openFile(System.in, System.out);
                     System.out.println("Enter key");
                     key = scanner.nextByte();
-                    Xor xor = new Xor(new EncryptionBase());
+                    xor = new Xor(new EncryptionBase());
+                    keys = new ArrayList<>();
+                    keys.add(key);
                     xor.register(observer);
                     try {
-                        data = xor.decrypt(Files.readAllBytes(file.toPath()), key);
+                        data = xor.decrypt(Files.readAllBytes(file.toPath()), keys);
 
                         path = file.getAbsolutePath();
                         path = path.substring(0, path.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
@@ -189,10 +250,12 @@ public class App {
                         {
                             throw new IllegalKeyException("Illegal key! Key cannot be divided by 2");
                         }
-                        Multiplication multiplication = new Multiplication(new EncryptionBase());
+                        multiplication = new Multiplication(new EncryptionBase());
+                        keys = new ArrayList<>();
+                        keys.add(key);
                         multiplication.register(observer);
                         try {
-                            data = multiplication.decrypt(Files.readAllBytes(file.toPath()), key);
+                            data = multiplication.decrypt(Files.readAllBytes(file.toPath()), keys);
 
                             path = file.getAbsolutePath();
                             path = path.substring(0, path.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
@@ -237,8 +300,8 @@ public class App {
                         /*System.out.println("before:");
                         for (byte b: data1)
                             System.out.println(b);*/
-                        Keys keys = FileOpener.getKeysDeserialization("C:\\Users\\shimi\\Desktop\\key.bin");
-                        System.out.println(keys.getKey1() + " , " + keys.getKey2());
+                        keys = FileOpener.getKeysDeserialization("C:\\Users\\shimi\\Desktop\\key.bin");
+                        System.out.println(keys.get(0) + " , " + keys.get(1));
                         Caesar caesar1 = new Caesar(new EncryptionBase());
                         Split<Encryption> split = new Split<>(caesar1);
                         data1 = split.decrypt(data1, keys);

@@ -8,6 +8,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -47,7 +48,9 @@ public class CaesarTest {
         new Random().nextBytes(src);
         Caesar caesar = new Caesar(new EncryptionBase());
 
-        EncryptionResult encryptionResult = caesar.encrypt(src, KeyGen.randKey());
+        List<Byte> keys = new ArrayList<>();
+        keys.add(KeyGen.randKey());
+        EncryptionResult encryptionResult = caesar.encrypt(src, keys);
         byte[] plain = caesar.decrypt(encryptionResult.getData(),encryptionResult.getKey());
 
         for(int i=0; i<plain.length; i++)
