@@ -30,7 +30,7 @@ public class Multiplication extends EncryptionDecorator{
         } while (this.key %2 == 0);//make sure key is not divided by 2*/
         this.key = key;
 
-        System.out.println("The encryption key is: " + this.key);
+//        System.out.println("The encryption key is: " + this.key);
 
         /*if(!data.getAbsolutePath().endsWith(".encrypted")) {
             cypher = new File(data.getAbsolutePath() + ".encrypted");//create encrypted file

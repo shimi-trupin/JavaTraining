@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by shimi on 30/05/2016.
@@ -165,8 +167,36 @@ public class App {
                     caesar = new Caesar(new EncryptionBase());
                     keys = new ArrayList<>();
                     keys.add(KeyGen.randKey());
-                    SyncDir<Encryption> syncDir = new SyncDir<>(ENCRYPTION, caesar, "C:\\Users\\shimi\\Desktop\\dirTest", keys);
+                    SyncDir<Encryption> syncDir = new SyncDir<>(ENCRYPTION, caesar, "C:\\Users\\shimi\\Desktop\\03.04.2015", keys);
                     (new Thread(syncDir)).start();
+                    break;
+                case "9":
+                    //open dir
+                    String dirPath = "C:\\Users\\shimi\\Desktop\\03.04.2015";
+                    File dir = new File(dirPath);
+                    if (!dir.isDirectory())
+                        return;
+                    //load files from dir
+                    File[] fileList = dir.listFiles();
+                    if (fileList.length == 0)
+                        return;
+
+                    //open subDir
+                    String subDir = dirPath + "\\encrypted_decrypted";
+                    if(!(new File(subDir)).mkdir())
+                        return;
+                    //serialize "key.bin" in subDir
+                    fileCreator = new FileCreator();
+                    keys = new ArrayList<>();
+                    keys.add((byte)1);
+                    fileCreator.serializeKey(subDir + "\\key.bin", keys);
+
+                    //executor
+                    ExecutorService executorService = Executors.newCachedThreadPool();
+                    for (File f: fileList){
+                        executorService.execute(new AsyncTask<Encryption>(ENCRYPTION, f, keys, new Caesar(new EncryptionBase())));
+                    }
+                    executorService.shutdown();
                     break;
                 default:
                     System.out.println("Wrong Input! make sure you enter the right number.");
@@ -309,6 +339,13 @@ public class App {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    break;
+                case "8":
+                    caesar = new Caesar(new EncryptionBase());
+                    keys = new ArrayList<>();
+                    keys.add(KeyGen.randKey());
+                    SyncDir<Encryption> syncDir = new SyncDir<>(DECRYPTION, caesar, "C:\\Users\\shimi\\Desktop\\03.04.2015\\encrypted_decrypted", keys);
+                    (new Thread(syncDir)).start();
                     break;
                 default:
                     System.out.println("Wrong Input! make sure you enter the right number.");

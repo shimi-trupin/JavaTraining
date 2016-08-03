@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by shimi on 01/08/2016.
@@ -56,7 +57,7 @@ public class SyncDir <T extends Encryption> implements Runnable {
                     encryptionResult = encryption.encrypt(data, keys);
 
                     String filePath = file.getAbsolutePath();
-                    filePath = filePath.substring(filePath.lastIndexOf("\\")) + ".encrypted";
+                    filePath = filePath.substring(filePath.lastIndexOf("\\")) /*+ ".encrypted"*/;
                     filePath = subDir + filePath;
 
                     fileCreator.createFile(filePath, encryptionResult.getData());
@@ -71,24 +72,37 @@ public class SyncDir <T extends Encryption> implements Runnable {
         }
         else if (action == DECRYPTION)
         {
+            keys = FileOpener.getKeysDeserialization(dirPath + "\\key.bin");
+            if (keys == null)
+                return;
+
             try {
-                for (File file : fileList)
-                {
-                    byte[] data = Files.readAllBytes(file.toPath());
+                for (File file : fileList) {
+//                    if (!Objects.equals(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("\\")), "key.bin"))
+                    if(!file.getAbsolutePath().equals(dirPath + "\\key.bin")){
+//                        keys = FileOpener.getKeysDeserialization(file.getAbsolutePath());
 
-                    data = encryption.decrypt(data, keys);
+                        byte[] data = Files.readAllBytes(file.toPath());
 
-                    String path = file.getAbsolutePath();
+                        data = encryption.decrypt(data, keys);
 
-                    // remove .encrypted at the end (if there is)
-                    path = path.substring(0, path.lastIndexOf(".encrypted"));
-                    // copy file name without format
-                    String file_path = path.substring(path.lastIndexOf("\\"), path.lastIndexOf("."));
-                    //add _decrypted to name and file format
-                    file_path = subDir + file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());
+//                        String path = file.getAbsolutePath();
 
-                    fileCreator.createFile(file_path, data);
+//                        // remove .encrypted at the end (if there is)
+//                        path = path.substring(0, path.lastIndexOf(".encrypted"));
+//                        // copy file name without format
+//                        String file_path = path.substring(path.lastIndexOf("\\"), path.lastIndexOf("."));
+//                        //add _decrypted to name and file format
+//                        file_path = subDir + file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());
+
+                        String filePath = file.getAbsolutePath();
+                        filePath = filePath.substring(filePath.lastIndexOf("\\")) ;
+                        filePath = subDir + filePath;
+
+                        fileCreator.createFile(filePath, data);
+                    }
                 }
+
             }
             catch (IOException e) {
                 e.printStackTrace();

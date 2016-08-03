@@ -30,7 +30,7 @@ public class Caesar extends EncryptionDecorator /*implements Subject*/{
 //        this.key = super.randKey();
         this.key = key;
 
-        System.out.println("The encryption key is: " + this.key);
+//        System.out.println("The encryption key is: " + this.key);
 //        if(!data.getAbsolutePath().endsWith(".encrypted")) {
 //            cypher = new File(data.getAbsolutePath() + ".encrypted");//create encrypted file
 //        }
