@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by shimi on 30/05/2016.
@@ -35,6 +36,7 @@ public class App {
         Caesar caesar;
         Xor xor;
         Multiplication multiplication;
+        long time;
 
 
         String inp = scanner.nextLine();//scan for user input
@@ -168,7 +170,15 @@ public class App {
                     keys = new ArrayList<>();
                     keys.add(KeyGen.randKey());
                     SyncDir<Encryption> syncDir = new SyncDir<>(ENCRYPTION, caesar, "C:\\Users\\shimi\\Desktop\\03.04.2015", keys);
-                    (new Thread(syncDir)).start();
+                    Thread t = /*(*/new Thread(syncDir)/*).start()*/;
+                    time = System.currentTimeMillis();
+                    t.start();
+                    try {
+                        t.join();
+                        System.out.println("\nEncryption took " + Long.toString(System.currentTimeMillis() - time) + " milliseconds");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case "9":
                     //open dir
@@ -193,10 +203,19 @@ public class App {
 
                     //executor
                     ExecutorService executorService = Executors.newCachedThreadPool();
+                    time = System.currentTimeMillis();
                     for (File f: fileList){
                         executorService.execute(new AsyncTask<Encryption>(ENCRYPTION, f, keys, new Caesar(new EncryptionBase())));
                     }
                     executorService.shutdown();
+
+                    //print finish time
+                    try {
+                        boolean timeout = executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+                        System.out.println("\nEncryption took " + Long.toString(System.currentTimeMillis() - time) + " milliseconds");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     System.out.println("Wrong Input! make sure you enter the right number.");
