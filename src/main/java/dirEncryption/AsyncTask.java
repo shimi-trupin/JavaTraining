@@ -1,7 +1,10 @@
-package javatraining;
+package dirEncryption;
 
+import designPatterns.Encryption;
+import tools.EncryptionResult;
 import lombok.Getter;
 import lombok.Setter;
+import tools.FileCreator;
 
 import java.io.File;
 import java.io.IOException;

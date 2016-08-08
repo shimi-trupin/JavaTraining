@@ -1,18 +1,16 @@
-package javatraining;
+package specialAlgorithms;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import designPatterns.Encryption;
+import designPatterns.EncryptionDecorator;
+import tools.EncryptionResult;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by shimi on 25/07/2016.
  */
-public class Split<T extends Encryption> extends EncryptionDecorator{
+public class Split<T extends Encryption> extends EncryptionDecorator {
     public Split(Encryption encryption) {
         super(encryption);
     }

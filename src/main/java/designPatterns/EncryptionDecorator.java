@@ -1,12 +1,10 @@
-package javatraining;
+package designPatterns;
 
+import tools.EncryptionResult;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.File;
-import java.time.Clock;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -16,9 +14,6 @@ import java.util.Random;
 public abstract class EncryptionDecorator implements Encryption, Subject{
 
     protected Encryption encryption;
-    @Getter private File file;
-    @Getter private Clock clock;
-    @Getter private Date startDate;
     @Getter @Setter private long startTime;
     private ArrayList<Observer> observers;
 
@@ -26,25 +21,17 @@ public abstract class EncryptionDecorator implements Encryption, Subject{
     {
         this.encryption = encryption;
         observers = new ArrayList<>();
-//        this.startDate = System.currentTimeMillis();
-//        this.startDate = Instant.now(clock);
-//        Instant first = Instant.now();
-//        Instant second = Instant.now();
-//        this.startTime = System.currentTimeMillis();
     }
 
     @Override
     public EncryptionResult encrypt(byte[] data, List<Byte> key) {
         encryption.encrypt(data, key);
-//        this.file = file;
-
         return null;
     }
 
     @Override
     public byte[] decrypt(byte[] data, List<Byte> key) {
         encryption.decrypt(data, key);
-//        this.file = file;
         return null;
     }
 
@@ -54,10 +41,6 @@ public abstract class EncryptionDecorator implements Encryption, Subject{
         random.nextBytes(b);
         return b[0];
     }
-
-//    public File getFile(){
-//        return file;
-//    }
 
     @Override
     public void register(Observer newObserver) {

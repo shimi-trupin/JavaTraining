@@ -3,10 +3,9 @@ package javatraining;
 import lombok.Cleanup;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.MethodRule;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+import tools.FileOpener;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package javatraining;
+package designPatterns;
 
 import java.time.Clock;
 

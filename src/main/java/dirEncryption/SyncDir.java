@@ -1,13 +1,16 @@
-package javatraining;
+package dirEncryption;
 
+import designPatterns.Encryption;
+import tools.EncryptionResult;
 import lombok.Getter;
 import lombok.Setter;
+import tools.FileCreator;
+import tools.FileOpener;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by shimi on 01/08/2016.

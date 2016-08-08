@@ -1,6 +1,4 @@
-package javatraining;
-
-import java.time.Clock;
+package designPatterns;
 
 /**
  * Created by shimi on 06/07/2016.

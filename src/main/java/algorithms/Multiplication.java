@@ -1,6 +1,9 @@
-package javatraining;
+package algorithms;
 
 
+import designPatterns.Encryption;
+import designPatterns.EncryptionDecorator;
+import tools.EncryptionResult;
 import lombok.Getter;
 
 import java.io.File;
@@ -10,7 +13,7 @@ import java.util.List;
  * Created by shimi on 06/07/2016.
  * Multiplication Algorithm.
  */
-public class Multiplication extends EncryptionDecorator{
+public class Multiplication extends EncryptionDecorator {
     @Getter private List<Byte> key;
 
     public Multiplication(Encryption encryption) {

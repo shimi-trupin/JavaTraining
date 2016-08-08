@@ -1,20 +1,17 @@
-package javatraining;
+package specialAlgorithms;
 
+import designPatterns.Encryption;
+import designPatterns.EncryptionDecorator;
+import tools.EncryptionResult;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by shimi on 19/07/2016.
  */
-public class Double<T extends Encryption>  extends EncryptionDecorator{
+public class Double<T extends Encryption>  extends EncryptionDecorator {
 
 //    T first;
     T second ;

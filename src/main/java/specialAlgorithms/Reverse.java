@@ -1,5 +1,9 @@
-package javatraining;
+package specialAlgorithms;
 
+
+import designPatterns.Encryption;
+import designPatterns.EncryptionDecorator;
+import tools.EncryptionResult;
 
 import java.util.List;
 

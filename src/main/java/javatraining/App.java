@@ -1,7 +1,28 @@
 package javatraining;
 
+import algorithms.Caesar;
+import algorithms.Multiplication;
+import algorithms.Xor;
+import designPatterns.Encryption;
+import designPatterns.EncryptionBase;
+import designPatterns.StartEndObserver;
+import dirEncryption.AsyncTask;
+import dirEncryption.SyncDir;
+import exceptions.IllegalKeyException;
+import specialAlgorithms.Split;
+import tools.EncryptionResult;
+import tools.FileCreator;
+import tools.FileOpener;
+import tools.KeyGen;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -370,41 +391,26 @@ public class App {
                     System.out.println("Wrong Input! make sure you enter the right number.");
                     break;
             }
-//            Decryption.decrypt();
         }
         else
             System.out.println("Incorrect Input");
-//        File file = new File(src);
 
     }
 
-    /*
-    * Helper function
-    * scans a file path from user, verifies it, and if all is good - returns file.
-    * Otherwise, keeps scanning for path.
-    * */
-    private static File openFile()
+    public static boolean validateAgainstXSD(InputStream xml, InputStream xsd)
     {
-        File file;
-        Scanner scanner = new Scanner(System.in);
-        String path;
-        while (true)
+        try
         {
-            System.out.println("Enter a path to source file");
-            path = scanner.nextLine();//scan for path from user
-            try {
-                file = new File(path);
-                if (file.exists() && file.isFile()) {
-                    return file;
-                }
-                else System.out.println("Incorrect path. Try again!");
-            }
-            catch (Exception e)
-            {
-                // if any error occurs
-                e.printStackTrace();
-            }
-
+            SchemaFactory factory =
+                    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(new StreamSource(xsd));
+            Validator validator = schema.newValidator();
+            validator.validate(new StreamSource(xml));
+            return true;
+        }
+        catch(Exception ex)
+        {
+            return false;
         }
     }
 }

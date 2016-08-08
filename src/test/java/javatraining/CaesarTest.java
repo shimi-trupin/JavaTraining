@@ -1,15 +1,14 @@
 package javatraining;
 
+import algorithms.Caesar;
+import designPatterns.EncryptionBase;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import tools.EncryptionResult;
+import tools.KeyGen;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 

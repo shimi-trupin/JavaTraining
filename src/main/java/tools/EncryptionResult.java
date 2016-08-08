@@ -1,4 +1,4 @@
-package javatraining;
+package tools;
 
 import lombok.Getter;
 import lombok.Setter;
