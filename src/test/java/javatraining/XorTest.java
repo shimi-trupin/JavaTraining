@@ -1,12 +1,12 @@
 package javatraining;
 
-import algorithms.Xor;
-import designPatterns.EncryptionBase;
+import javatraining.algorithms.Xor;
+import javatraining.designPatterns.EncryptionBase;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import tools.EncryptionResult;
-import tools.KeyGen;
+import javatraining.tools.EncryptionResult;
+import javatraining.tools.KeyGen;
 
 import java.util.ArrayList;
 import java.util.List;

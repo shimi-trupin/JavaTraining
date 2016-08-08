@@ -1,11 +1,11 @@
-package dirEncryption;
+package javatraining.dirEncryption;
 
-import designPatterns.Encryption;
-import tools.EncryptionResult;
+import javatraining.designPatterns.Encryption;
+import javatraining.tools.EncryptionResult;
 import lombok.Getter;
 import lombok.Setter;
-import tools.FileCreator;
-import tools.FileOpener;
+import javatraining.tools.FileCreator;
+import javatraining.tools.FileOpener;
 
 import java.io.File;
 import java.io.IOException;

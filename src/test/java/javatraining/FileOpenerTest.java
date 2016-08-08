@@ -5,7 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
-import tools.FileOpener;
+import javatraining.tools.FileOpener;
 
 import java.io.File;
 import java.io.IOException;

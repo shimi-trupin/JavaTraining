@@ -1,10 +1,10 @@
 package javatraining;
 
-import algorithms.Multiplication;
-import designPatterns.EncryptionBase;
+import javatraining.algorithms.Multiplication;
+import javatraining.designPatterns.EncryptionBase;
 import org.junit.Test;
-import tools.EncryptionResult;
-import tools.KeyGen;
+import javatraining.tools.EncryptionResult;
+import javatraining.tools.KeyGen;
 
 import java.util.ArrayList;
 import java.util.List;

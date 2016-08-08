@@ -1,9 +1,9 @@
-package specialAlgorithms;
+package javatraining.specialAlgorithms;
 
 
-import designPatterns.Encryption;
-import designPatterns.EncryptionDecorator;
-import tools.EncryptionResult;
+import javatraining.designPatterns.Encryption;
+import javatraining.designPatterns.EncryptionDecorator;
+import javatraining.tools.EncryptionResult;
 
 import java.util.List;
 

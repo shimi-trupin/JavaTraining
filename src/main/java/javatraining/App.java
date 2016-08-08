@@ -1,28 +1,22 @@
 package javatraining;
 
-import algorithms.Caesar;
-import algorithms.Multiplication;
-import algorithms.Xor;
-import designPatterns.Encryption;
-import designPatterns.EncryptionBase;
-import designPatterns.StartEndObserver;
-import dirEncryption.AsyncTask;
-import dirEncryption.SyncDir;
-import exceptions.IllegalKeyException;
-import specialAlgorithms.Split;
-import tools.EncryptionResult;
-import tools.FileCreator;
-import tools.FileOpener;
-import tools.KeyGen;
+import javatraining.algorithms.Caesar;
+import javatraining.algorithms.Multiplication;
+import javatraining.algorithms.Xor;
+import javatraining.designPatterns.Encryption;
+import javatraining.designPatterns.EncryptionBase;
+import javatraining.designPatterns.StartEndObserver;
+import javatraining.dirEncryption.AsyncTask;
+import javatraining.dirEncryption.SyncDir;
+import javatraining.exceptions.IllegalKeyException;
+import javatraining.specialAlgorithms.Split;
+import javatraining.tools.EncryptionResult;
+import javatraining.tools.FileCreator;
+import javatraining.tools.FileOpener;
+import javatraining.tools.KeyGen;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -397,7 +391,7 @@ public class App {
 
     }
 
-    public static boolean validateAgainstXSD(InputStream xml, InputStream xsd)
+    /*public static boolean validateAgainstXSD(InputStream xml, InputStream xsd)
     {
         try
         {
@@ -412,5 +406,5 @@ public class App {
         {
             return false;
         }
-    }
+    }*/
 }

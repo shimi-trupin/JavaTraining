@@ -1,4 +1,4 @@
-package tools;
+package javatraining.tools;
 
 import java.io.*;
 import java.util.ArrayList;

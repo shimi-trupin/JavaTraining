@@ -1,4 +1,4 @@
-package designPatterns;
+package javatraining.designPatterns;
 
 /**
  * Created by shimi on 17/07/2016.

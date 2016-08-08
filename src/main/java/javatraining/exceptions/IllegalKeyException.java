@@ -1,4 +1,4 @@
-package exceptions;
+package javatraining.exceptions;
 
 /**
  * Created by shimi on 11/07/2016.

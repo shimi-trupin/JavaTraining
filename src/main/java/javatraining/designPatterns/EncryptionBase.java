@@ -1,6 +1,6 @@
-package designPatterns;
+package javatraining.designPatterns;
 
-import tools.EncryptionResult;
+import javatraining.tools.EncryptionResult;
 
 import java.util.List;
 import java.util.Random;
