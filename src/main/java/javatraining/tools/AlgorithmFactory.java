@@ -1,6 +1,8 @@
 package javatraining.tools;
 
+import javatraining.algorithms.Caesar;
 import javatraining.designPatterns.Encryption;
+import javatraining.designPatterns.EncryptionBase;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +15,9 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.List;
 
 /**
@@ -37,11 +42,16 @@ public class AlgorithmFactory {
 
         try
         {
-            SchemaFactory factory =
-                    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(xsdFile));
+            String xmlPath = xmlFile.getAbsolutePath();
+            xmlPath = URLDecoder.decode(xmlPath, "UTF-8");
+            String xsdPath = xsdFile.getAbsolutePath();
+            xsdPath = URLDecoder.decode(xsdPath, "UTF-8");
+            InputStream xml = new FileInputStream(xmlPath);
+            InputStream xsd = new FileInputStream(xsdPath);
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(new StreamSource(xsd));
             Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(xmlFile));
+            validator.validate(new StreamSource(xml));
             return true;
         }
         catch(Exception ex)
@@ -62,10 +72,11 @@ public class AlgorithmFactory {
 
                 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
                 EncryptionAlgorithm encryptionAlgorithm = (EncryptionAlgorithm) jaxbUnmarshaller.unmarshal(xmlFile);
-                System.out.println(encryptionAlgorithm);
+//                System.out.println(encryptionAlgorithm);
 
                 switch (encryptionAlgorithm.getAlgorithmName().toLowerCase()){
                     case "caesar":
+                        encryption = new Caesar(new EncryptionBase());
                         break;
                 }
 
