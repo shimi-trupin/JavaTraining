@@ -24,7 +24,7 @@ public class Double/*<T extends EncryptionDecorator>*/  extends EncryptionDecora
         super(/*data, key*/);
         throw new NotImplementedException();
     }
-    public Double(EncryptionDecorator first , EncryptionDecorator second, byte[] data, List<Byte> key){
+    public Double(EncryptionDecorator first , EncryptionDecorator second){
         super();
         this.first = first;
         this.second=second;

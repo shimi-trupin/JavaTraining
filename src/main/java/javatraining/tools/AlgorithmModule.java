@@ -2,8 +2,12 @@ package javatraining.tools;
 
 import com.google.inject.AbstractModule;
 import javatraining.algorithms.Caesar;
+import javatraining.algorithms.Multiplication;
 import javatraining.algorithms.Xor;
 import javatraining.designPatterns.EncryptionDecorator;
+import javatraining.specialAlgorithms.Double;
+import javatraining.specialAlgorithms.Reverse;
+import javatraining.specialAlgorithms.Split;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,12 +51,61 @@ public class AlgorithmModule extends AbstractModule {
 //                        algorithm = new Xor();
                         bind(EncryptionDecorator.class).toInstance(new Xor());
                         break;
-//                    case "multiplication":
+                    case "multiplication":
 //                        algorithm = new Multiplication();
-//                        break;
-//                    case "doublecaesarxor":
-//                        algorithm = new Double(new Caesar(), new Xor());
-//                        break;
+                        bind(EncryptionDecorator.class).toInstance( new Multiplication());
+                        break;
+
+
+                    case "double_caesar_caesar":
+                        bind(EncryptionDecorator.class).toInstance(new Double(new Caesar(), new Caesar()));
+                        break;
+                    case "double_caesar_xor":
+                        bind(EncryptionDecorator.class).toInstance(new Double(new Caesar(), new Xor()));
+                        break;
+                    case "double_caesar_multiplication":
+                        bind(EncryptionDecorator.class).toInstance(new Double(new Caesar(), new Multiplication()));
+                        break;
+                    case "double_xor_caesar":
+                        bind(EncryptionDecorator.class).toInstance(new Double(new Xor(), new Caesar()));
+                        break;
+                    case "double_xor_xor":
+                        bind(EncryptionDecorator.class).toInstance(new Double(new Xor(), new Xor()));
+                        break;
+                    case "double_xor_multiplication":
+                        bind(EncryptionDecorator.class).toInstance(new Double(new Xor(), new Multiplication()));
+                        break;
+                    case "double_multiplication_caesar":
+                        bind(EncryptionDecorator.class).toInstance(new Double(new Multiplication(), new Caesar()));
+                        break;
+                    case "double_multiplication_xor":
+                        bind(EncryptionDecorator.class).toInstance(new Double(new Multiplication(), new Xor()));
+                        break;
+                    case "double_multiplication_multiplication":
+                        bind(EncryptionDecorator.class).toInstance(new Double(new Multiplication(), new Multiplication()));
+                        break;
+
+
+                    case "reverse_caesar":
+                        bind(EncryptionDecorator.class).toInstance(new Reverse(new Caesar()));
+                        break;
+                    case "reverse_xor":
+                        bind(EncryptionDecorator.class).toInstance(new Reverse(new Xor()));
+                        break;
+                    case "reverse_multiplication":
+                        bind(EncryptionDecorator.class).toInstance(new Reverse(new Multiplication()));
+                        break;
+
+
+                    case "split_caesar":
+                        bind(EncryptionDecorator.class).toInstance(new Split(new Caesar()));
+                        break;
+                    case "split_xor":
+                        bind(EncryptionDecorator.class).toInstance(new Split(new Xor()));
+                        break;
+                    case "split_multiplication":
+                        bind(EncryptionDecorator.class).toInstance(new Split(new Multiplication()));
+                        break;
                 }
 
             } catch (JAXBException e) {

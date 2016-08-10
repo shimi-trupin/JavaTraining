@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javatraining.designPatterns.Encryption;
 import javatraining.designPatterns.EncryptionDecorator;
+import javatraining.designPatterns.StartEndObserver;
 import javatraining.tools.*;
 
 import javax.xml.XMLConstants;
@@ -44,28 +45,31 @@ public class Driver {
         List<Byte> key;
         EncryptionResult encryptionResult;
         byte[] data;
-        String path;
+        String path, file_path;
         FileCreator fileCreator;
+        Injector injector;
+        StartEndObserver observer = new StartEndObserver();
         /*---------------------------*/
 
         switch (action){
             case 1:
                 // Encrypt/Decrypt a single file
                 System.out.println("Type 'E' for encryption, or type 'D' for decryption");
-                scanner = new Scanner(System.in);
+                scanner = new Scanner(System.in);// TODO: 10/08/2016 injection?
                 encrypt_decrypt = scanner.nextLine();
 
 
+                /*----------------ENCRYPTION SINGLE FILE----------------*/
                 if(encrypt_decrypt.toLowerCase().equals("e"))
                 {
-                    //open file
-                    file = fileOpener.openFile(System.in, System.out);
-
                     //gets default algorithm
 /*                    AlgorithmFactory algorithmFactory = new AlgorithmFactory();
                     encryption = algorithmFactory.getDefault();*/
-                    Injector injector = Guice.createInjector(new AlgorithmModule());
+                    injector = Guice.createInjector(new AlgorithmModule());
                     encryption = injector.getInstance(EncryptionDecorator.class);
+
+                    //open file
+                    file = fileOpener.openFile(System.in, System.out);
 
                     //create random key
                     key = new ArrayList<>();
@@ -85,9 +89,38 @@ public class Driver {
                     fileCreator.serializeKey(path, key);
 
                 }
+
+                /*----------------DECRYPTION SINGLE FILE----------------*/
                 else if (encrypt_decrypt.toLowerCase().equals("d"))
                 {
+                    injector = Guice.createInjector(new AlgorithmModule());
+                    encryption = injector.getInstance(EncryptionDecorator.class);
 
+                    //open file
+                    file = fileOpener.openFile(System.in, System.out);
+
+                    //get key
+                    System.out.println("Enter source to 'key.bin' file:");
+                    path = scanner.nextLine();
+                    key = FileOpener.getKeysDeserialization(path);
+
+                    encryption.register(observer);
+
+                    //decryption
+                    data = encryption.decrypt(fileToByteArray(file), key);
+
+                    //create decrypted file
+                    path = file.getAbsolutePath();
+                    if (path.lastIndexOf(".encrypted")!= -1)
+                        path = path.substring(0, path.lastIndexOf(".encrypted"));// remove .encrypted at the end (if there is)
+                    file_path = path.substring(0, path.lastIndexOf("."));// copy file path without format
+                    file_path = file_path + "_decrypted" + path.substring(path.lastIndexOf("."), path.length());//add _decrypted to name and file format
+
+                    fileCreator = new FileCreator();
+                    fileCreator.createFile(file_path, data);
+
+                    path = path.substring(0, path.lastIndexOf("\\")) + "\\key.bin";
+                    fileCreator.serializeKey(path, key);
                 }
                 else System.out.println("Wrong input!");
                 break;

@@ -16,7 +16,7 @@ import java.util.List;
 public class Multiplication extends EncryptionDecorator {
 //    @Getter private List<Byte> key;
 
-    public Multiplication(Encryption encryption) {
+    public Multiplication() {
         super(/*encryption*/);
     }
 //    private File file;
