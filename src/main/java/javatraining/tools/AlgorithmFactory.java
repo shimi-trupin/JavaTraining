@@ -1,12 +1,7 @@
 package javatraining.tools;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import javatraining.algorithms.Caesar;
-import javatraining.designPatterns.Encryption;
-import javatraining.designPatterns.EncryptionBase;
 import javatraining.designPatterns.EncryptionDecorator;
-import javatraining.modules.CaesarModule;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -81,8 +76,6 @@ public class AlgorithmFactory {
                 switch (encryptionAlgorithm.getAlgorithmName().toLowerCase()){
                     case "caesar":
                         encryption = new Caesar();
-//                        Injector injector = Guice.createInjector(new CaesarModule());
-//                        encryption = injector.getInstance(Encryption.class);
                         break;
                 }
 

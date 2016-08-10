@@ -1,6 +1,8 @@
 package javatraining.dirEncryption;
 
+import com.google.inject.Inject;
 import javatraining.designPatterns.Encryption;
+import javatraining.designPatterns.EncryptionDecorator;
 import javatraining.tools.EncryptionResult;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,16 +16,17 @@ import java.util.List;
 /**
  * Created by shimi on 03/08/2016.
  */
-public class AsyncTask <T extends Encryption> implements Runnable {
+public class AsyncTask implements Runnable {
 
     @Getter @Setter private File file;
     @Getter @Setter private List<Byte> key;
-    @Getter @Setter private T encryption;
+    @Getter @Setter private EncryptionDecorator encryption;
     private int action;
     private final int ENCRYPTION = 0;
     private final int DECRYPTION = 1;
 
-    public AsyncTask(int action, File file, List<Byte> key, T encryption) {
+    @Inject
+    public AsyncTask(int action, File file, List<Byte> key, EncryptionDecorator encryption) {
         this.action = action;
         this.file = file;
         this.key = key;

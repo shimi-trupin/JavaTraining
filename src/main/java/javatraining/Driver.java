@@ -4,8 +4,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javatraining.designPatterns.EncryptionDecorator;
 import javatraining.designPatterns.StartEndObserver;
+import javatraining.dirEncryption.AsyncTask;
 import javatraining.dirEncryption.SyncDir;
 import javatraining.modules.AlgorithmModule;
+import javatraining.modules.AsyncDirModule;
 import javatraining.modules.SyncDirModule;
 import javatraining.tools.*;
 
@@ -21,6 +23,9 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by shimi on 08/08/2016.
@@ -35,8 +40,8 @@ public class Driver {
         System.out.println("Choose an action (enter the number):" + "\n" +
                 "1. Encrypt/Decrypt a single file" + "\n" +
                 "2. Encrypt/Decrypt a directory" + "\n" +
-                "3. Additional algorithms" + "\n" +
-                "4. Change default algorithm");
+                "3. Change default algorithm" + "\n" +
+                "4. Import/Export");
 
         Scanner scanner = new Scanner(System.in);
         int action = scanner.nextInt();
@@ -151,8 +156,6 @@ public class Driver {
                 if (action == 1)
                 {
                     //sync
-                    /*injector = Guice.createInjector(new AlgorithmModule());
-                    encryption = injector.getInstance(EncryptionDecorator.class);*/
                     injector = Guice.createInjector(new SyncDirModule());
                     SyncDir syncDir = injector.getInstance(SyncDir.class);
 
@@ -165,16 +168,46 @@ public class Driver {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                }
+                else if (action == 2)
+                {
+                    //async
+/*                    injector = Guice.createInjector(new AlgorithmModule());
+                    encryption = injector.getInstance(EncryptionDecorator.class);*/
 
-                    /*System.out.println("Type 'E' for encryption, or type 'D' for decryption");
-                    scanner = new Scanner(System.in);// TODO: 10/08/2016 injection?
+
+
+                    //open dir
+                    System.out.println("Enter a path to source directory:");
+                    scanner = new Scanner(System.in);
+                    path = scanner.nextLine();
+
+                    File dir = new File(path);
+                    if (!dir.isDirectory())
+                        return;
+                    //load files from dir
+                    File[] fileList = dir.listFiles();
+                    if (fileList.length == 0)
+                        return;
+
+                    //open subDir
+                    String subDir = path + "\\encrypted_decrypted";
+                    if(!(new File(subDir)).mkdir())
+                        return;
+
+                    System.out.println("Type 'E' for encryption, or type 'D' for decryption");
+                    scanner = new Scanner(System.in);
                     encrypt_decrypt = scanner.nextLine();
+                    if (encrypt_decrypt.toLowerCase().equals("e")) {
+                        action = 0;
+                        //serialize "key.bin" in subDir
+                        fileCreator = new FileCreator();
 
-                    if(encrypt_decrypt.toLowerCase().equals("e"))
-                    {
-                        //generate key
+                        injector = Guice.createInjector(new AlgorithmModule());
+                        EncryptionDecorator algorithm = injector.getInstance(EncryptionDecorator.class);
+
                         key = new ArrayList<>();
-                        type = encryption.getClass().getSimpleName();
+                        type = algorithm.getClass().getSimpleName();
                         if (type.toLowerCase().contains("double") || type.toLowerCase().contains("split")) {
                             if (type.toLowerCase().contains("multiplication"))
                             {
@@ -190,29 +223,36 @@ public class Driver {
                             key.add(KeyGen.randOddKey());
                         else key.add(KeyGen.randKey());
 
-
-                    }//encryption*/
-                }
-                else if (action == 2)
-                {
-                    //async
-
-//                    caesar = new Caesar(new EncryptionBase());
-                    injector = Guice.createInjector(new AlgorithmModule());
-                    encryption = injector.getInstance(EncryptionDecorator.class);
+                        fileCreator.serializeKey(subDir + "\\key.bin", key);
+                    }
+                    else /*if (encrypt_decrypt.toLowerCase().equals("d")) */{// TODO: 10/08/2016 uncomment and add else throw new
+                        action = 1;
+                        System.out.println("Enter source to 'key.bin' file:");
+                        path = scanner.nextLine();
+                        key = FileOpener.getKeysDeserialization(path);
+                    }
 
 
 
-                    /*SyncDir<Encryption> syncDir = new SyncDir<>(ENCRYPTION, caesar, "C:\\Users\\shimi\\Desktop\\03.04.2015", keys);
-                    Thread t = new Thread(syncDir);
+
+                    //executor
+                    ExecutorService executorService = Executors.newCachedThreadPool();
                     time = System.currentTimeMillis();
-                    t.start();
+                    for (File f: fileList){
+                        injector = Guice.createInjector(new AlgorithmModule());
+                        EncryptionDecorator algorithm = injector.getInstance(EncryptionDecorator.class);
+                        executorService.execute(new AsyncTask(action, f, key, algorithm));
+                    }
+                    executorService.shutdown();
+
+                    //print finish time
                     try {
-                        t.join();
+                        boolean timeout = executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
                         System.out.println("\nEncryption took " + Long.toString(System.currentTimeMillis() - time) + " milliseconds");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }*/
+                    }
+
                 }
                 else System.out.println("Wrong input!");
                 break;
