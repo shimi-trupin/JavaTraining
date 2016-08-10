@@ -7,7 +7,7 @@ import javatraining.designPatterns.StartEndObserver;
 import javatraining.dirEncryption.AsyncTask;
 import javatraining.dirEncryption.SyncDir;
 import javatraining.modules.AlgorithmModule;
-import javatraining.modules.AsyncDirModule;
+import javatraining.modules.ChangeDefaultModule;
 import javatraining.modules.SyncDirModule;
 import javatraining.tools.*;
 
@@ -27,18 +27,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Created by shimi on 08/08/2016.
+ */
 public class Driver {
 
     private static File file;
     private static FileOpener fileOpener = new FileOpener();
 
     public static void main(String[] args) {
-
+        checkForConfigXml();
         System.out.println("Choose an action (enter the number):" + "\n" +
                 "1. Encrypt/Decrypt a single file" + "\n" +
                 "2. Encrypt/Decrypt a directory" + "\n" +
                 "3. Change default algorithm" + "\n" +
-                "4. Import/Export");
+                "4. ");
 
         Scanner scanner = new Scanner(System.in);
         int action = scanner.nextInt();
@@ -222,14 +225,14 @@ public class Driver {
 
                         fileCreator.serializeKey(subDir + "\\key.bin", key);
                     }
-                    else /*if (encrypt_decrypt.toLowerCase().equals("d")) */{// TODO: 10/08/2016 uncomment and add else throw new
+                    else if (encrypt_decrypt.toLowerCase().equals("d")) {
                         action = 1;
                         System.out.println("Enter source to 'key.bin' file:");
                         path = scanner.nextLine();
                         key = FileOpener.getKeysDeserialization(path);
                     }
 
-
+                    else return;//todo add else throw new
 
 
                     //executor
@@ -254,14 +257,24 @@ public class Driver {
                 else System.out.println("Wrong input!");
                 break;
             case 3:
-                // Additional algorithms
+                // Change default algorithm
+                injector = Guice.createInjector(new ChangeDefaultModule());
+                ChangeDefault changeDefault= injector.getInstance(ChangeDefault.class);
+                changeDefault.change();
                 break;
             case 4:
-                // Change default algorithm
+                //
                 break;
             default:
                 System.out.println("Wrong input!");
         }
+    }
+
+    private static void checkForConfigXml() {
+
+        System.out.println("somrething ");
+        File aa = new File("EncryptionAlgorithm.xml");
+
     }
 
     public static boolean validateAgainstXSD(InputStream xml, InputStream xsd)
