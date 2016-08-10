@@ -27,6 +27,11 @@ public class Multiplication extends EncryptionDecorator {
         setStartTime(System.currentTimeMillis());
         notifyObserver("Multiplication encryption started.");
 
+        for (int i=0; i<data.length; i++)//encrypt
+        {
+            data[i] = (byte) ((data[i] * key.get(0)) % 256);
+        }
+
         notifyObserver("Multiplication encryption ended.\nTime took: "
                 + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 

@@ -1,4 +1,4 @@
-package javatraining.tools;
+package javatraining.modules;
 
 import com.google.inject.AbstractModule;
 import javatraining.algorithms.Caesar;
@@ -8,6 +8,7 @@ import javatraining.designPatterns.EncryptionDecorator;
 import javatraining.specialAlgorithms.Double;
 import javatraining.specialAlgorithms.Reverse;
 import javatraining.specialAlgorithms.Split;
+import javatraining.tools.EncryptionAlgorithm;
 import lombok.Getter;
 import lombok.Setter;
 

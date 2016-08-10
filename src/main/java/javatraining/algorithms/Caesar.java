@@ -32,11 +32,11 @@ public class Caesar extends EncryptionDecorator {
 
 //        this.key = key;
 
-        System.out.println("Caesar: ");
+//        System.out.println("Caesar: ");
         for (int i=0; i<data.length; i++)//encrypt
         {
             data[i] = (byte) ((data[i] + key.get(0)) % 256);
-            System.out.print(data[i] + " ");
+//            System.out.print(data[i] + " ");
         }
 
         notifyObserver("Caesar encryption ended.\nTime took: "

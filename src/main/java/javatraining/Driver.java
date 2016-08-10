@@ -2,9 +2,11 @@ package javatraining;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import javatraining.designPatterns.Encryption;
 import javatraining.designPatterns.EncryptionDecorator;
 import javatraining.designPatterns.StartEndObserver;
+import javatraining.dirEncryption.SyncDir;
+import javatraining.modules.AlgorithmModule;
+import javatraining.modules.SyncDirModule;
 import javatraining.tools.*;
 
 import javax.xml.XMLConstants;
@@ -45,10 +47,11 @@ public class Driver {
         List<Byte> key;
         EncryptionResult encryptionResult;
         byte[] data;
-        String path, file_path;
+        String path, file_path, type;
         FileCreator fileCreator;
         Injector injector;
         StartEndObserver observer = new StartEndObserver();
+        long time;
         /*---------------------------*/
 
         switch (action){
@@ -73,7 +76,21 @@ public class Driver {
 
                     //create random key
                     key = new ArrayList<>();
-                    key.add(KeyGen.randKey());
+                    type = encryption.getClass().getSimpleName();
+                    if (type.toLowerCase().contains("double") || type.toLowerCase().contains("split")) {
+                        if (type.toLowerCase().contains("multiplication"))
+                        {
+                            key.add(KeyGen.randOddKey());
+                            key.add(KeyGen.randOddKey());
+                        }
+                        else {
+                            key.add(KeyGen.randKey());
+                            key.add(KeyGen.randKey());
+                        }
+                    }
+                    else if (type.toLowerCase().contains("multiplication"))
+                        key.add(KeyGen.randOddKey());
+                    else key.add(KeyGen.randKey());
 
                     //encryption
                     encryptionResult = encryption.encrypt(fileToByteArray(file), key);
@@ -126,6 +143,78 @@ public class Driver {
                 break;
             case 2:
                 // Encrypt/Decrypt a directory
+                System.out.println("choose the wanted number:\n" +
+                        "1. Sync \n" +
+                        "2. Async\n");
+                scanner = new Scanner(System.in);// TODO: 10/08/2016 injection?
+                action = scanner.nextInt();
+                if (action == 1)
+                {
+                    //sync
+                    /*injector = Guice.createInjector(new AlgorithmModule());
+                    encryption = injector.getInstance(EncryptionDecorator.class);*/
+                    injector = Guice.createInjector(new SyncDirModule());
+                    SyncDir syncDir = injector.getInstance(SyncDir.class);
+
+                    Thread thread = new Thread(syncDir);
+                    time = System.currentTimeMillis();
+                    thread.start();
+                    try {
+                        thread.join();
+                        System.out.println("\nEncryption took " + Long.toString(System.currentTimeMillis() - time) + " milliseconds");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    /*System.out.println("Type 'E' for encryption, or type 'D' for decryption");
+                    scanner = new Scanner(System.in);// TODO: 10/08/2016 injection?
+                    encrypt_decrypt = scanner.nextLine();
+
+                    if(encrypt_decrypt.toLowerCase().equals("e"))
+                    {
+                        //generate key
+                        key = new ArrayList<>();
+                        type = encryption.getClass().getSimpleName();
+                        if (type.toLowerCase().contains("double") || type.toLowerCase().contains("split")) {
+                            if (type.toLowerCase().contains("multiplication"))
+                            {
+                                key.add(KeyGen.randOddKey());
+                                key.add(KeyGen.randOddKey());
+                            }
+                            else {
+                                key.add(KeyGen.randKey());
+                                key.add(KeyGen.randKey());
+                            }
+                        }
+                        else if (type.toLowerCase().contains("multiplication"))
+                            key.add(KeyGen.randOddKey());
+                        else key.add(KeyGen.randKey());
+
+
+                    }//encryption*/
+                }
+                else if (action == 2)
+                {
+                    //async
+
+//                    caesar = new Caesar(new EncryptionBase());
+                    injector = Guice.createInjector(new AlgorithmModule());
+                    encryption = injector.getInstance(EncryptionDecorator.class);
+
+
+
+                    /*SyncDir<Encryption> syncDir = new SyncDir<>(ENCRYPTION, caesar, "C:\\Users\\shimi\\Desktop\\03.04.2015", keys);
+                    Thread t = new Thread(syncDir);
+                    time = System.currentTimeMillis();
+                    t.start();
+                    try {
+                        t.join();
+                        System.out.println("\nEncryption took " + Long.toString(System.currentTimeMillis() - time) + " milliseconds");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }*/
+                }
+                else System.out.println("Wrong input!");
                 break;
             case 3:
                 // Additional algorithms

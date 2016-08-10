@@ -1,6 +1,8 @@
 package javatraining.dirEncryption;
 
+import com.google.inject.Inject;
 import javatraining.designPatterns.Encryption;
+import javatraining.designPatterns.EncryptionDecorator;
 import javatraining.tools.EncryptionResult;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,19 +17,20 @@ import java.util.List;
 /**
  * Created by shimi on 01/08/2016.
  */
-public class SyncDir <T extends Encryption> implements Runnable {
+public class SyncDir implements Runnable {
 
     private static final int ENCRYPTION = 0;
     private static final int DECRYPTION = 1;
     private int action;
-    @Getter @Setter private T encryption;
-//    @Getter @Setter private List<File> files;
+//    @Getter @Setter private T encryption;
+    @Getter @Setter private EncryptionDecorator algorithm;
     @Getter @Setter private List<Byte> keys;
     @Getter @Setter private String dirPath;
 
-    public SyncDir(int action, T encryption, String dirPath, List<Byte> keys) {
+    @Inject
+    public SyncDir(int action, EncryptionDecorator algorithm, String dirPath, List<Byte> keys) {
         this.action = action;
-        this.encryption = encryption;
+        this.algorithm = algorithm;
         this.dirPath = dirPath;
         this.keys = keys;
     }
@@ -57,7 +60,7 @@ public class SyncDir <T extends Encryption> implements Runnable {
 
                     byte[] data = Files.readAllBytes(file.toPath());
 
-                    encryptionResult = encryption.encrypt(data, keys);
+                    encryptionResult = algorithm.encrypt(data, keys);
 
                     String filePath = file.getAbsolutePath();
                     filePath = filePath.substring(filePath.lastIndexOf("\\")) /*+ ".encrypted"*/;
@@ -87,7 +90,7 @@ public class SyncDir <T extends Encryption> implements Runnable {
 
                         byte[] data = Files.readAllBytes(file.toPath());
 
-                        data = encryption.decrypt(data, keys);
+                        data = algorithm.decrypt(data, keys);
 
 //                        String path = file.getAbsolutePath();
 

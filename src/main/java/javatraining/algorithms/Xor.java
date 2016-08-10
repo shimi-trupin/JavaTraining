@@ -28,11 +28,11 @@ public class Xor extends EncryptionDecorator {
 
 //        this.key = key;
 
-        System.out.println("XOR: ");
+//        System.out.println("XOR: ");
         for (int i=0; i<data.length; i++)//encrypt
         {
             data[i] = (byte) (data[i] ^ /*this.*/key.get(0));
-            System.out.print(data[i] + " ");
+//            System.out.print(data[i] + " ");
         }
 
         notifyObserver("XOR encryption ended.\nTime took: "
