@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  * Created by shimi on 18/07/2016.
  */
 public class XorTest {
-    @Rule
+    /*@Rule
     public TemporaryFolder folder= new TemporaryFolder();
 
     @Test
@@ -37,5 +37,5 @@ public class XorTest {
         //compare the original file and the decrypted one
         for(int i=0; i<plain.length; i++)
             assertEquals("Does not encrypt\\decrypt correctly", plain[i], src[i]);
-    }
+    }*/
 }

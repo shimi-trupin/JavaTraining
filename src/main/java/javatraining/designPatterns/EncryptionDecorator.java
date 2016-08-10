@@ -1,5 +1,6 @@
 package javatraining.designPatterns;
 
+import com.google.inject.Inject;
 import javatraining.tools.EncryptionResult;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,34 +14,26 @@ import java.util.Random;
  */
 public abstract class EncryptionDecorator implements Encryption, Subject{
 
-    protected Encryption encryption;
+//    protected Encryption encryption;
+//    @Getter @Setter private byte[] data;
+//    @Getter @Setter private List<Byte> key;
     @Getter @Setter private long startTime;
     private ArrayList<Observer> observers;
 
-    public EncryptionDecorator(Encryption encryption)
+    @Inject
+    public EncryptionDecorator(/*byte[] data, List<Byte> key*/)
     {
-        this.encryption = encryption;
+//        this.data = data;
+//        this.key = key;
+//        this.encryption = encryption;
         observers = new ArrayList<>();
     }
 
     @Override
-    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
-        encryption.encrypt(data, key);
-        return null;
-    }
+    public abstract EncryptionResult encrypt(byte[] data, List<Byte> key);
 
     @Override
-    public byte[] decrypt(byte[] data, List<Byte> key) {
-        encryption.decrypt(data, key);
-        return null;
-    }
-
-    public byte randKey(){
-        Random random = new Random();
-        byte[] b = new byte[1];
-        random.nextBytes(b);
-        return b[0];
-    }
+    public abstract byte[] decrypt(byte[] data, List<Byte> key);
 
     @Override
     public void register(Observer newObserver) {

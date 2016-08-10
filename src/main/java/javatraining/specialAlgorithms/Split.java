@@ -10,76 +10,59 @@ import java.util.List;
 /**
  * Created by shimi on 25/07/2016.
  */
-public class Split<T extends Encryption> extends EncryptionDecorator {
+public class Split/*<T extends Encryption>*/ extends EncryptionDecorator {
+
+    private EncryptionDecorator algorithm;
+
     public Split(Encryption encryption) {
-        super(encryption);
+        super();
+        this.algorithm = algorithm;
     }
 
     @Override
     public EncryptionResult encrypt(byte[] data, List<Byte> key) {
-//        try {
-//            byte[] data = Files.readAllBytes(file.toPath());
-            byte odd[], even[];
 
-            //split data into odd and even
-            if(data.length%2 ==0) {
-                odd = new byte[data.length / 2];
-                even = new byte[data.length / 2];
-            }
-            else {
-                odd = new byte[data.length / 2];
-                even = new byte[(data.length / 2) + 1];
-            }
-            for(int i=0, j=0, k=0; i<data.length; i++)
-            {
-                if(i%2 != 0)
-                    odd[j++] = data[i];
-                else
-                    even[k++] = data[i];
-            }
+        byte odd[], even[];
 
-            List<Byte> keyList = new ArrayList<>();
-
-            //encrypt odd bytes with key1
-            keyList.add(key.get(0));
-            EncryptionResult encryptionResult = encryption.encrypt(odd, keyList);
-            odd = encryptionResult.getData();
-
-            //encrypt even bytes with key2
-            keyList.remove(0);
-            keyList.add(key.get(1));
-            encryptionResult = encryption.encrypt(even, keyList);
-            even = encryptionResult.getData();
-
-            //merge odd and even bytes together
-            for (int i=0, j=0; i< odd.length; i++)
-            {
-                data[j++] = even[i];
-                data[j++] = odd[i];
-            }
-            if (data.length % 2 != 0)
-                data[data.length-1] = even[even.length-1];
-
-            /*//write "key.bin" file (with serialization
-            String path = file.getParent() + "\\key.bin";
-            // TODO: 25/07/2016 serialization
-            Keys keys = new Keys(key1, key2);
-            FileOutputStream fileOut = new FileOutputStream(path);
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(keys);
-            out.close();
-            fileOut.close();
-            ///////
-            *//*byte keys[] = {key1, key2};
-            Files.write(Paths.get(path), keys);*//*
-
-            //write '.encrypted' file
-            path = file.getPath() + ".encrypted";
-            Files.write(Paths.get(path), data);
+        //split data into odd and even
+        if(data.length%2 ==0) {
+            odd = new byte[data.length / 2];
+            even = new byte[data.length / 2];
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        else {
+            odd = new byte[data.length / 2];
+            even = new byte[(data.length / 2) + 1];
+        }
+        for(int i=0, j=0, k=0; i<data.length; i++)
+        {
+            if(i%2 != 0)
+                odd[j++] = data[i];
+            else
+                even[k++] = data[i];
+        }
+
+        List<Byte> keyList = new ArrayList<>();
+
+        //encrypt odd bytes with key1
+        keyList.add(key.get(0));
+        EncryptionResult encryptionResult = algorithm.encrypt(odd, keyList);
+        odd = encryptionResult.getData();
+
+        //encrypt even bytes with key2
+        keyList.remove(0);
+        keyList.add(key.get(1));
+        encryptionResult = algorithm.encrypt(even, keyList);
+        even = encryptionResult.getData();
+
+        //merge odd and even bytes together
+        for (int i=0, j=0; i< odd.length; i++)
+        {
+            data[j++] = even[i];
+            data[j++] = odd[i];
+        }
+        if (data.length % 2 != 0)
+            data[data.length-1] = even[even.length-1];
+
         return new EncryptionResult(data, key);
     }
 
@@ -172,12 +155,12 @@ public class Split<T extends Encryption> extends EncryptionDecorator {
 
         //decrypt odd bytes with key1
         keyList.add(key.get(0));
-        odd = encryption.decrypt(odd, keyList);
+        odd = algorithm.decrypt(odd, keyList);
 
         //encrypt even bytes with key2
         keyList.remove(0);
         keyList.add(key.get(1));
-        even = encryption.decrypt(even, keyList);
+        even = algorithm.decrypt(even, keyList);
 
         //merge odd and even bytes together
         for (int i=0, j=0; i< odd.length; i++)

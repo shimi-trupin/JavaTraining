@@ -3,6 +3,8 @@ package javatraining.specialAlgorithms;
 import javatraining.designPatterns.Encryption;
 import javatraining.designPatterns.EncryptionDecorator;
 import javatraining.tools.EncryptionResult;
+import lombok.Getter;
+import lombok.Setter;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
@@ -11,31 +13,34 @@ import java.util.List;
 /**
  * Created by shimi on 19/07/2016.
  */
-public class Double<T extends Encryption>  extends EncryptionDecorator {
+public class Double/*<T extends EncryptionDecorator>*/  extends EncryptionDecorator {
 
-//    T first;
-    T second ;
+//    @Getter @Setter private byte[] data;
+//    @Getter @Setter private List<Byte> key;
+    private /*T*/EncryptionDecorator first;
+    private /*T*/EncryptionDecorator second;
 
-    public Double(T encryption) {
-        super(encryption);
+    public Double() {
+        super(/*data, key*/);
         throw new NotImplementedException();
     }
-    public Double(T first , T second ){
-        super (first);
+    public Double(EncryptionDecorator first , EncryptionDecorator second, byte[] data, List<Byte> key){
+        super();
+        this.first = first;
         this.second=second;
     }
-    // todo overrise supers encrypt and decrypt woth awsome logic much brains such wow.
-
 
     @Override
     public EncryptionResult encrypt(byte[] data, List<Byte> key) {
         EncryptionResult encryptionResult;
         List<Byte> keyList = new ArrayList<>();
         keyList.add(key.get(0));
-        encryptionResult = encryption.encrypt(data, keyList);
+//        first.setKey(keyList);
+        encryptionResult = first.encrypt(data, keyList);
 
         keyList.remove(0);
         keyList.add(key.get(1));
+//        second.setKey(keyList);
 
         data = encryptionResult.getData();
         encryptionResult = second.encrypt(data, keyList);
@@ -48,11 +53,13 @@ public class Double<T extends Encryption>  extends EncryptionDecorator {
     public byte[] decrypt(byte[] data, List<Byte> key) {
         List<Byte> keyList = new ArrayList<>();
         keyList.add(key.get(1));
+//        first.setKey(keyList);
         data = second.decrypt(data, keyList);
 
         keyList.remove(0);
         keyList.add(key.get(0));
-        data = encryption.decrypt(data, keyList);
+//        second.setKey(keyList);
+        data = first.decrypt(data, keyList);
 
         return data;
     }

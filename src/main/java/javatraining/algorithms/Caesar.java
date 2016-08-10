@@ -1,10 +1,12 @@
 package javatraining.algorithms;
 
 
+import com.google.inject.Inject;
 import javatraining.designPatterns.Encryption;
 import javatraining.designPatterns.EncryptionDecorator;
 import javatraining.tools.EncryptionResult;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -14,11 +16,12 @@ import java.util.List;
  */
 public class Caesar extends EncryptionDecorator {
 
+/*    @Getter @Setter private byte[] data;
+    @Getter @Setter private List<Byte> key;*/
 
-    @Getter private List<Byte> key;
-
-    public Caesar(Encryption encryption) {
-        super(encryption);
+    @Inject
+    public Caesar() {
+        super();
     }
 
     @Override
@@ -27,32 +30,34 @@ public class Caesar extends EncryptionDecorator {
         setStartTime(System.currentTimeMillis());
         notifyObserver("Caesar encryption started.");
 
-        this.key = key;
+//        this.key = key;
 
-            for (int i=0; i<data.length; i++)//encrypt
-            {
-                data[i] = (byte) ((data[i] + this.key.get(0)) % 256);
-            }
+        System.out.println("Caesar: ");
+        for (int i=0; i<data.length; i++)//encrypt
+        {
+            data[i] = (byte) ((data[i] + key.get(0)) % 256);
+            System.out.print(data[i] + " ");
+        }
 
-            notifyObserver("Caesar encryption ended.\nTime took: "
-                    + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
+        notifyObserver("Caesar encryption ended.\nTime took: "
+                + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
-        return new EncryptionResult(data, this.key);
+        return new EncryptionResult(data, key);
     }
 
     @Override
     public byte[] decrypt(byte[] data, List<Byte> key) {
         setStartTime(System.currentTimeMillis());
         notifyObserver("Caesar decryption started.");
-            for (int i=0; i<data.length; i++)//write to file with decrypted bytes
-            {
-                data[i] = (byte) ((data[i] - key.get(0)) % 256);
-            }
+        for (int i=0; i<data.length; i++)//write to file with decrypted bytes
+        {
+            data[i] = (byte) ((data[i] - key.get(0)) % 256);
+        }
 
-            notifyObserver("Caesar decryption ended.\nTime took: "
-                    + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
+        notifyObserver("Caesar decryption ended.\nTime took: "
+                + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
-            return data;
+        return data;
     }
 
 }

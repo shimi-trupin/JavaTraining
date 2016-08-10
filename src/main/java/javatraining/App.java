@@ -35,7 +35,7 @@ public class App {
     private static final int DECRYPTION = 1;
 
     public static void main(String[] args)
-    {
+    {/*
         System.out.println("Type 'e' for encryption, or type 'd' for decryption");
         Scanner scanner = new Scanner(System.in);
         File file;
@@ -85,8 +85,8 @@ public class App {
                         e.printStackTrace();
                     }
 
-                    /*Caesar caesar = new Caesar();
-                    caesar.encrypt(file);*/
+                    *//*Caesar caesar = new Caesar();
+                    caesar.encrypt(file);*//*
 
                     break;
                 case "2":
@@ -112,8 +112,8 @@ public class App {
                         e.printStackTrace();
                     }
 
-                    /*encryption = new Xor();
-                    encryption.encrypt(file);*/
+                    *//*encryption = new Xor();
+                    encryption.encrypt(file);*//*
 
                     break;
                 case "3":
@@ -140,11 +140,11 @@ public class App {
                     catch (IOException e) {
                         e.printStackTrace();
                     }
-                    /*encryption = new Multiplication();
-                    encryption.encrypt(file);*/
+                    *//*encryption = new Multiplication();
+                    encryption.encrypt(file);*//*
 
                     break;
-                /*case "4":// TODO: 24/07/2016 add options to menu, add sub selection of algs and rand key (odd if needed)
+                *//*case "4":// TODO: 24/07/2016 add options to menu, add sub selection of algs and rand key (odd if needed)
                     file = fileOpener.openFile(System.in, System.out);
                     Xor xor1 = new Xor(new EncryptionBase());
                     Caesar caesar1 = new Caesar(new EncryptionBase());
@@ -155,7 +155,7 @@ public class App {
                     Caesar caesar2 = new Caesar(new EncryptionBase());// TODO: 24/07/2016 write general Caesar caesar, Xor xor before switch case
                     Reverse<Encryption> encryptionReverse = new Reverse<>(caesar2);
                     encryptionReverse.encrypt(new FileOpener().openFile(System.in, System.out), KeyGen.randKey());
-                    break;*/
+                    break;*//*
                 case "6":
                     path = "C:\\Users\\shimi\\Desktop\\Untitled-5.jpg";
                     caesar = new Caesar(new EncryptionBase());
@@ -168,7 +168,7 @@ public class App {
                         encryptionResult = split.encrypt(Files.readAllBytes(Paths.get(path)), keys);
 
                         data = encryptionResult.getData();
-                        path = /*file.getAbsolutePath()*/ path + ".encrypted";//add .encrypted to end of file name
+                        path = *//*file.getAbsolutePath()*//* path + ".encrypted";//add .encrypted to end of file name
 
                         fileCreator = new FileCreator();
                         fileCreator.createFile(path, data);
@@ -185,7 +185,7 @@ public class App {
                     keys = new ArrayList<>();
                     keys.add(KeyGen.randKey());
                     SyncDir<Encryption> syncDir = new SyncDir<>(ENCRYPTION, caesar, "C:\\Users\\shimi\\Desktop\\03.04.2015", keys);
-                    Thread t = /*(*/new Thread(syncDir)/*).start()*/;
+                    Thread t = *//*(*//*new Thread(syncDir)*//*).start()*//*;
                     time = System.currentTimeMillis();
                     t.start();
                     try {
@@ -280,11 +280,14 @@ public class App {
                 case "2":
                     //XOR Algorithm
                     file = fileOpener.openFile(System.in, System.out);
-                    System.out.println("Enter key");
-                    key = scanner.nextByte();
+//                    System.out.println("Enter key");
+//                    key = scanner.nextByte();
+                    System.out.println("Enter source to 'key.bin' file:");
+                    path = scanner.nextLine();
                     xor = new Xor(new EncryptionBase());
-                    keys = new ArrayList<>();
-                    keys.add(key);
+                    *//*keys = new ArrayList<>();
+                    keys.add(key);*//*
+                    keys = FileOpener.getKeysDeserialization(path);
                     xor.register(observer);
                     try {
                         data = xor.decrypt(Files.readAllBytes(file.toPath()), keys);
@@ -300,8 +303,8 @@ public class App {
                         e.printStackTrace();
                     }
 
-                    /*encryption = new Xor();
-                    encryption.decrypt(file, key);*/
+                    *//*encryption = new Xor();
+                    encryption.decrypt(file, key);*//*
 
                     break;
                 case "3":
@@ -332,15 +335,15 @@ public class App {
                             e.printStackTrace();
                         }
 
-                        /*encryption = new Multiplication();
-                        encryption.decrypt(file, key);*/
+                        *//*encryption = new Multiplication();
+                        encryption.decrypt(file, key);*//*
 
                     } catch (IllegalKeyException e) {
                         System.out.println(e.getMessage());
                     }
 
                     break;
-                /*case "4":
+                *//*case "4":
                     file = fileOpener.openFile(System.in, System.out);
                     System.out.println("You also need to enter the 'key.bin' file location.");
                     File keysFile = fileOpener.openFile(System.in, System.out);
@@ -357,13 +360,13 @@ public class App {
                     catch (IOException e) {
                         e.printStackTrace();
                     }
-                    break;*/
+                    break;*//*
                 case "6":
                     try {
                         byte[] data1 = Files.readAllBytes(Paths.get("C:\\Users\\shimi\\Desktop\\Untitled-5.jpg.encrypted"));
-                        /*System.out.println("before:");
+                        *//*System.out.println("before:");
                         for (byte b: data1)
-                            System.out.println(b);*/
+                            System.out.println(b);*//*
                         keys = FileOpener.getKeysDeserialization("C:\\Users\\shimi\\Desktop\\key.bin");
                         System.out.println(keys.get(0) + " , " + keys.get(1));
                         Caesar caesar1 = new Caesar(new EncryptionBase());
@@ -387,7 +390,7 @@ public class App {
             }
         }
         else
-            System.out.println("Incorrect Input");
+            System.out.println("Incorrect Input");*/
 
     }
 

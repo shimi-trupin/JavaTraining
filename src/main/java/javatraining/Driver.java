@@ -1,6 +1,9 @@
 package javatraining;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import javatraining.designPatterns.Encryption;
+import javatraining.designPatterns.EncryptionDecorator;
 import javatraining.tools.*;
 
 import javax.xml.XMLConstants;
@@ -37,7 +40,7 @@ public class Driver {
 
         /*----Declaring Variables----*/
         String encrypt_decrypt;
-        Encryption encryption;
+        EncryptionDecorator encryption;
         List<Byte> key;
         EncryptionResult encryptionResult;
         byte[] data;
@@ -59,8 +62,10 @@ public class Driver {
                     file = fileOpener.openFile(System.in, System.out);
 
                     //gets default algorithm
-                    AlgorithmFactory algorithmFactory = new AlgorithmFactory();
-                    encryption = algorithmFactory.getDefault();
+/*                    AlgorithmFactory algorithmFactory = new AlgorithmFactory();
+                    encryption = algorithmFactory.getDefault();*/
+                    Injector injector = Guice.createInjector(new AlgorithmModule());
+                    encryption = injector.getInstance(EncryptionDecorator.class);
 
                     //create random key
                     key = new ArrayList<>();

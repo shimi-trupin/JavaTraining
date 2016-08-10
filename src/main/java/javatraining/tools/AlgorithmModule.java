@@ -1,12 +1,9 @@
 package javatraining.tools;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.inject.AbstractModule;
 import javatraining.algorithms.Caesar;
-import javatraining.designPatterns.Encryption;
-import javatraining.designPatterns.EncryptionBase;
+import javatraining.algorithms.Xor;
 import javatraining.designPatterns.EncryptionDecorator;
-import javatraining.modules.CaesarModule;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,16 +19,47 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URLDecoder;
-import java.util.List;
 
 /**
- * Created by shimi on 08/08/2016.
+ * Created by shimi on 10/08/2016.
  */
-public class AlgorithmFactory {
-    @Getter @Setter private EncryptionDecorator encryption;
-    @Getter @Setter private List<Byte> key;
+public class AlgorithmModule extends AbstractModule {
+
     @Getter @Setter private File xmlFile;
     @Getter @Setter private File xsdFile;
+
+
+    @Override
+    protected void configure() {
+        if(validate()) {
+            try {
+                JAXBContext jaxbContext = JAXBContext.newInstance(EncryptionAlgorithm.class);
+
+                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                EncryptionAlgorithm encryptionAlgorithm = (EncryptionAlgorithm) jaxbUnmarshaller.unmarshal(xmlFile);
+
+                switch (encryptionAlgorithm.getAlgorithmName().toLowerCase()) {
+                    case "caesar":
+//                        algorithm = new Caesar();
+                        bind(EncryptionDecorator.class).toInstance( new Caesar());
+                        break;
+                    case "xor":
+//                        algorithm = new Xor();
+                        bind(EncryptionDecorator.class).toInstance(new Xor());
+                        break;
+//                    case "multiplication":
+//                        algorithm = new Multiplication();
+//                        break;
+//                    case "doublecaesarxor":
+//                        algorithm = new Double(new Caesar(), new Xor());
+//                        break;
+                }
+
+            } catch (JAXBException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private boolean validate() {
         ClassLoader classLoader = getClass().getClassLoader();
@@ -62,36 +90,5 @@ public class AlgorithmFactory {
         {
             return false;
         }
-    }
-
-    public EncryptionDecorator getDefault()
-    {
-        encryption = null;
-        if(validate()){
-            /////////////////
-            try {
-
-//                File file = new File("C:\\file.xml");
-                JAXBContext jaxbContext = JAXBContext.newInstance(EncryptionAlgorithm.class);
-
-                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-                EncryptionAlgorithm encryptionAlgorithm = (EncryptionAlgorithm) jaxbUnmarshaller.unmarshal(xmlFile);
-//                System.out.println(encryptionAlgorithm);
-
-                switch (encryptionAlgorithm.getAlgorithmName().toLowerCase()){
-                    case "caesar":
-                        encryption = new Caesar();
-//                        Injector injector = Guice.createInjector(new CaesarModule());
-//                        encryption = injector.getInstance(Encryption.class);
-                        break;
-                }
-
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
-            /////////////////
-        }
-        else System.out.println("XML file is not valid!");
-        return encryption;
     }
 }

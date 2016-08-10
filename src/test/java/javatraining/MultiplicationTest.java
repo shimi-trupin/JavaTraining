@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
  */
 public class MultiplicationTest {
 
-    @Test
+    /*@Test
     public void MultiplicationAlgorithmTest() throws Exception {
         byte[] src = new byte[20];
         new Random().nextBytes(src);
@@ -33,5 +33,5 @@ public class MultiplicationTest {
         //compare the original file and the decrypted one
         for(int i=0; i<plain.length; i++)
             assertEquals("Does not encrypt\\decrypt correctly", plain[i], src[i]);
-    }
+    }*/
 }

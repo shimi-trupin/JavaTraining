@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class Xor extends EncryptionDecorator {
 
-    @Getter private List<Byte> key;
+//    @Getter private List<Byte> key;
 
-    public Xor(Encryption encryption) {
-        super(encryption);
+    public Xor(/*Encryption encryption*/) {
+        super();
     }
 
     @Override
@@ -25,20 +25,20 @@ public class Xor extends EncryptionDecorator {
 
         setStartTime(System.currentTimeMillis());
         notifyObserver("XOR encryption started.");
-        File cypher;
 
-        this.key = key;
+//        this.key = key;
 
-//        System.out.println("The encryption key is: " + this.key);
+        System.out.println("XOR: ");
         for (int i=0; i<data.length; i++)//encrypt
         {
-            data[i] = (byte) (data[i] ^ this.key.get(0));
+            data[i] = (byte) (data[i] ^ /*this.*/key.get(0));
+            System.out.print(data[i] + " ");
         }
 
         notifyObserver("XOR encryption ended.\nTime took: "
                 + Long.toString(System.currentTimeMillis() - getStartTime()) + " milliseconds");
 
-        return new EncryptionResult(data, this.key);
+        return new EncryptionResult(data, key);
     }
 
 
