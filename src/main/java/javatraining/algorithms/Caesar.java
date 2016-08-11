@@ -25,7 +25,7 @@ public class Caesar extends EncryptionDecorator {
     }
 
     @Override
-    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
+    public EncryptionResult encrypt(byte[] data, List<Byte> key){
 
         setStartTime(System.currentTimeMillis());
         notifyObserver("Caesar encryption started.");

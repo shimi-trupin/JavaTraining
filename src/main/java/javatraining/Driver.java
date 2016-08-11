@@ -12,13 +12,15 @@ import javatraining.modules.SyncDirModule;
 import javatraining.tools.*;
 
 import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,9 +83,9 @@ public class Driver {
 
                     //create random key
                     key = new ArrayList<>();
-                    type = encryption.getClass().getSimpleName();
-                    if (type.toLowerCase().contains("double") || type.toLowerCase().contains("split")) {
-                        if (type.toLowerCase().contains("multiplication"))
+                    type = encryption.getClass().getSimpleName().toLowerCase();
+                    if (type.contains("double") || type.contains("split")) {
+                        if (type.contains("multiplication"))
                         {
                             key.add(KeyGen.randOddKey());
                             key.add(KeyGen.randOddKey());
@@ -93,12 +95,18 @@ public class Driver {
                             key.add(KeyGen.randKey());
                         }
                     }
-                    else if (type.toLowerCase().contains("multiplication"))
+                    else if (type.contains("multiplication"))
                         key.add(KeyGen.randOddKey());
                     else key.add(KeyGen.randKey());
 
-                    //encryption
-                    encryptionResult = encryption.encrypt(fileToByteArray(file), key);
+
+                        //encryption
+                    try {
+                        encryptionResult = encryption.encrypt(fileToByteArray(file), key);
+                    } catch (Exception e) {
+                        //// TODO:
+                        break;
+                    }
 
                     //create encrypted file and "key.bin" file
                     data = encryptionResult.getData();
@@ -129,7 +137,12 @@ public class Driver {
                     encryption.register(observer);
 
                     //decryption
-                    data = encryption.decrypt(fileToByteArray(file), key);
+                    try {
+                        data = encryption.decrypt(fileToByteArray(file), key);
+                    } catch (Exception e) {
+                        e.printStackTrace();//TODO
+                        break;
+                    }
 
                     //create decrypted file
                     path = file.getAbsolutePath();
@@ -169,12 +182,10 @@ public class Driver {
                         e.printStackTrace();
                     }
                 }
-                else if (action == 2)
-                {
+                else if (action == 2) {
                     //async
 /*                    injector = Guice.createInjector(new AlgorithmModule());
                     encryption = injector.getInstance(EncryptionDecorator.class);*/
-
 
 
                     //open dir
@@ -192,7 +203,7 @@ public class Driver {
 
                     //open subDir
                     String subDir = path + "\\encrypted_decrypted";
-                    if(!(new File(subDir)).mkdir())
+                    if (!(new File(subDir)).mkdir())
                         return;
 
                     System.out.println("Type 'E' for encryption, or type 'D' for decryption");
@@ -207,38 +218,32 @@ public class Driver {
                         EncryptionDecorator algorithm = injector.getInstance(EncryptionDecorator.class);
 
                         key = new ArrayList<>();
-                        type = algorithm.getClass().getSimpleName();
-                        if (type.toLowerCase().contains("double") || type.toLowerCase().contains("split")) {
-                            if (type.toLowerCase().contains("multiplication"))
-                            {
+                        type = algorithm.getClass().getSimpleName().toLowerCase();
+                        if (type.contains("double") || type.contains("split")) {
+                            if (type.contains("multiplication")) {
                                 key.add(KeyGen.randOddKey());
                                 key.add(KeyGen.randOddKey());
-                            }
-                            else {
+                            } else {
                                 key.add(KeyGen.randKey());
                                 key.add(KeyGen.randKey());
                             }
-                        }
-                        else if (type.toLowerCase().contains("multiplication"))
+                        } else if (type.contains("multiplication"))
                             key.add(KeyGen.randOddKey());
                         else key.add(KeyGen.randKey());
 
                         fileCreator.serializeKey(subDir + "\\key.bin", key);
-                    }
-                    else if (encrypt_decrypt.toLowerCase().equals("d")) {
+                    } else if (encrypt_decrypt.toLowerCase().equals("d")) {
                         action = 1;
                         System.out.println("Enter source to 'key.bin' file:");
                         path = scanner.nextLine();
                         key = FileOpener.getKeysDeserialization(path);
-                    }
-
-                    else return;//todo add else throw new
+                    } else return;//todo add else throw new
 
 
                     //executor
                     ExecutorService executorService = Executors.newCachedThreadPool();
                     time = System.currentTimeMillis();
-                    for (File f: fileList){
+                    for (File f : fileList) {
                         injector = Guice.createInjector(new AlgorithmModule());
                         EncryptionDecorator algorithm = injector.getInstance(EncryptionDecorator.class);
                         executorService.execute(new AsyncTask(action, f, key, algorithm));
@@ -253,8 +258,7 @@ public class Driver {
                         e.printStackTrace();
                     }
 
-                }
-                else System.out.println("Wrong input!");
+                } else System.out.println("Wrong input!");
                 break;
             case 3:
                 // Change default algorithm
@@ -270,11 +274,64 @@ public class Driver {
         }
     }
 
+    public static void saveXmlReport (boolean status , String time , Exception e , String pathToFolder ){
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(XmlReport.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            XmlReport report = new XmlReport();
+            report.status=status? "success" : "failed";
+            report.time=time;
+            report.excMessage= e.getMessage();
+            report.excName = e.getClass().getName();
+            report.excStacktrace = e.getStackTrace().toString();
+
+            jaxbMarshaller.marshal(report,new FileWriter(pathToFolder+"report.xml"));
+
+        } catch (Exception ex) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
     private static void checkForConfigXml() {
 
-        System.out.println("somrething ");
-        File aa = new File("EncryptionAlgorithm.xml");
+        ClassLoader classLoader = new Driver().getClass().getClassLoader();
+        try
+        {
+        FileInputStream xml = new FileInputStream ( new File ("EncryptionAlgorithm.xml"));
+            InputStream xsd = new Driver().getClass().getResourceAsStream( "/EncryptionAlgorithm.xsd" );
 
+
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(new StreamSource(xsd));
+            Validator validator = schema.newValidator();
+            validator.validate(new StreamSource(xml));
+        }
+        catch(Exception ex)
+        {
+
+            try {
+                EncryptionAlgorithm defaultAlgorithm = new EncryptionAlgorithm();
+                defaultAlgorithm.setAlgorithmName("caesar");
+
+                JAXBContext jaxbContext = JAXBContext.newInstance(EncryptionAlgorithm.class);
+
+                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+                // output pretty printed
+                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+                jaxbMarshaller.marshal(defaultAlgorithm,new FileWriter("EncryptionAlgorithm.xml"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static boolean validateAgainstXSD(InputStream xml, InputStream xsd)

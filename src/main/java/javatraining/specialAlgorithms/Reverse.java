@@ -20,13 +20,13 @@ public class Reverse /*<T extends Encryption>*/ extends EncryptionDecorator {
     }
 
     @Override
-    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
+    public EncryptionResult encrypt(byte[] data, List<Byte> key) throws Exception{
         data = algorithm.decrypt(data, key);
         return new EncryptionResult(data, key);
     }
 
     @Override
-    public byte[] decrypt(byte[] data, List<Byte> key) {
+    public byte[] decrypt(byte[] data, List<Byte> key) throws Exception {
         return algorithm.encrypt(data, key).getData();
     }
 }

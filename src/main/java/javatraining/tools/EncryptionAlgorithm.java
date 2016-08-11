@@ -1,5 +1,8 @@
 package javatraining.tools;
 
+
+import lombok.Getter;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -8,15 +11,16 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class EncryptionAlgorithm {
-    String AlgorithmName;
 
+     private String AlgorithmName;
 
-    public String getAlgorithmName() {
-        return AlgorithmName;
-    }
+      @XmlElement
+      public void setAlgorithmName(String algorithmName) {
+            AlgorithmName = algorithmName;
+      }
 
-    @XmlElement
-    public void setAlgorithmName(String algorithmName) {
-        this.AlgorithmName = algorithmName;
-    }
+      public String getAlgorithmName() {
+
+            return AlgorithmName;
+      }
 }

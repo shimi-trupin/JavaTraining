@@ -61,6 +61,7 @@ public class ChangeDefaultModule extends AbstractModule {
                 switch (choice){
                     case 1:
                         name += "_caesar";
+                        break;
                     case 2:
                         name += "_xor";
                         break;
@@ -79,6 +80,7 @@ public class ChangeDefaultModule extends AbstractModule {
                 switch (choice){
                     case 1:
                         name += "_caesar";
+                        break;
                     case 2:
                         name += "_xor";
                         break;
