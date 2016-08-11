@@ -20,7 +20,7 @@ public class Split/*<T extends Encryption>*/ extends EncryptionDecorator {
     }
 
     @Override
-    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
+    public EncryptionResult encrypt(byte[] data, List<Byte> key) throws Exception{
 
         byte odd[], even[];
 
@@ -131,7 +131,7 @@ public class Split/*<T extends Encryption>*/ extends EncryptionDecorator {
 
 
     @Override
-    public byte[] decrypt(byte[] data, List<Byte> key) {
+    public byte[] decrypt(byte[] data, List<Byte> key) throws Exception{
         byte odd[], even[];
 
         //split data into odd and even

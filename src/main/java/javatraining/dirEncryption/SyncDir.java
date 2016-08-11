@@ -72,7 +72,7 @@ public class SyncDir implements Runnable {
                 fileCreator.serializeKey(subDir + "\\key.bin", keys);
 
                 System.out.println("\nfinished");
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -110,7 +110,7 @@ public class SyncDir implements Runnable {
                 }
 
             }
-            catch (IOException e) {
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }

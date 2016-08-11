@@ -34,8 +34,7 @@ public class ChangeDefault {
             // output pretty printed
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            System.out.println(xml.getAbsolutePath());
-            jaxbMarshaller.marshal(algorithm, xml);
+            jaxbMarshaller.marshal(algorithm, new File("EncryptionAlgorithm.xml"));
 
         } catch (JAXBException e) {
             e.printStackTrace();

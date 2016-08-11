@@ -31,7 +31,7 @@ public class Double/*<T extends EncryptionDecorator>*/  extends EncryptionDecora
     }
 
     @Override
-    public EncryptionResult encrypt(byte[] data, List<Byte> key) {
+    public EncryptionResult encrypt(byte[] data, List<Byte> key)throws Exception {
         EncryptionResult encryptionResult;
         List<Byte> keyList = new ArrayList<>();
         keyList.add(key.get(0));
@@ -50,7 +50,7 @@ public class Double/*<T extends EncryptionDecorator>*/  extends EncryptionDecora
     }
 
     @Override
-    public byte[] decrypt(byte[] data, List<Byte> key) {
+    public byte[] decrypt(byte[] data, List<Byte> key) throws Exception{
         List<Byte> keyList = new ArrayList<>();
         keyList.add(key.get(1));
 //        first.setKey(keyList);

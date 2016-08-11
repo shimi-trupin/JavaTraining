@@ -30,8 +30,8 @@ import java.net.URLDecoder;
  */
 public class AlgorithmModule extends AbstractModule {
 
-    @Getter @Setter private File xmlFile;
-    @Getter @Setter private File xsdFile;
+    @Getter @Setter private InputStream xmlFile;
+    @Getter @Setter private InputStream xsdFile;
 
 
     @Override
@@ -119,25 +119,21 @@ public class AlgorithmModule extends AbstractModule {
         ClassLoader classLoader = getClass().getClassLoader();
 
         try {
-            setXmlFile(new File(classLoader.getResource("EncryptionAlgorithm.xml").getFile()));
-            setXsdFile(new File(classLoader.getResource("EncryptionAlgorithm.xsd").getFile()));
+            setXmlFile(new FileInputStream ( new File ("EncryptionAlgorithm.xml")));
+            setXsdFile(this.getClass().getResourceAsStream( "/EncryptionAlgorithm.xsd" ));
         }
-        catch (NullPointerException e){
+        catch (Exception e){
             System.out.println(e.getMessage());
         }
 
         try
         {
-            String xmlPath = xmlFile.getAbsolutePath();
-            xmlPath = URLDecoder.decode(xmlPath, "UTF-8");
-            String xsdPath = xsdFile.getAbsolutePath();
-            xsdPath = URLDecoder.decode(xsdPath, "UTF-8");
-            InputStream xml = new FileInputStream(xmlPath);
-            InputStream xsd = new FileInputStream(xsdPath);
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(xsd));
+            Schema schema = factory.newSchema(new StreamSource(getXsdFile()));
             Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(xml));
+            validator.validate(new StreamSource(getXmlFile()));
+
+            setXmlFile(new FileInputStream ( new File ("EncryptionAlgorithm.xml")));
             return true;
         }
         catch(Exception ex)

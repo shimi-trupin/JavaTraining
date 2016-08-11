@@ -30,10 +30,10 @@ public abstract class EncryptionDecorator implements Encryption, Subject{
     }
 
     @Override
-    public abstract EncryptionResult encrypt(byte[] data, List<Byte> key);
+    public abstract EncryptionResult encrypt(byte[] data, List<Byte> key) throws Exception;
 
     @Override
-    public abstract byte[] decrypt(byte[] data, List<Byte> key);
+    public abstract byte[] decrypt(byte[] data, List<Byte> key) throws Exception;
 
     @Override
     public void register(Observer newObserver) {

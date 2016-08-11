@@ -1,6 +1,7 @@
 package javatraining.dirEncryption;
 
 import com.google.inject.Inject;
+import javatraining.Driver;
 import javatraining.designPatterns.Encryption;
 import javatraining.designPatterns.EncryptionDecorator;
 import javatraining.tools.EncryptionResult;
@@ -39,6 +40,8 @@ public class AsyncTask implements Runnable {
         //convert file to byte array (data)
         FileCreator fileCreator = new FileCreator();
         EncryptionResult encryptionResult;
+        Long time = System.currentTimeMillis();
+
         try {
             byte[] data = Files.readAllBytes(file.toPath());
 
@@ -64,8 +67,12 @@ public class AsyncTask implements Runnable {
                 fileCreator.createFile(filePath, data);
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            time -= System.currentTimeMillis();
+
+            Driver.saveXmlReport(true,time.toString() ,null, file .getAbsolutePath() );
+
+        } catch (Exception e ) {
+            Driver.saveXmlReport(false, null , e , file .getAbsolutePath() );
         }
 
         //if encryption
